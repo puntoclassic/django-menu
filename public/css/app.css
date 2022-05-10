@@ -1,0 +1,37 @@
+.main-topbar {
+  height: 100px;
+  background-color: var(--bs-primary);
+}
+
+.main-desktopmenu {
+  height: 40px;
+  background-color: var(--bs-secondary);
+}
+
+.text-logo {
+  color: white;
+  text-decoration: none;
+  font-size: 24pt;
+}
+.text-logo a {
+  color: white !important;
+  text-decoration: none;
+  font-size: 24pt;
+}
+.text-logo a:hover {
+  color: white !important;
+  text-decoration: none;
+  font-size: 24pt;
+}
+.text-logo:hover {
+  color: white !important;
+  text-decoration: none;
+  font-size: 24pt;
+}
+
+.hamburger-menu {
+  width: 400px;
+  background-color: var(--bs-secondary);
+  color: white;
+  z-index: 1;
+}/*# sourceMappingURL=app.css.map */

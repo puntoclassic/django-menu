@@ -1,0 +1,39 @@
+.main-topbar {
+    height: 100px;
+    background-color: var(--bs-primary);
+  }
+
+  .main-desktopmenu {
+    height: 40px;
+    background-color: var(--bs-secondary);
+  }
+
+  .text-logo {
+    color:white;
+    text-decoration: none;
+    font-size: 24pt;
+
+    a {
+        color:white!important;
+        text-decoration: none;
+        font-size: 24pt;
+        &:hover{
+            color: white!important;
+            text-decoration: none;
+            font-size: 24pt;
+        }
+    }
+
+    &:hover {
+        color: white!important;
+        text-decoration: none;
+        font-size: 24pt;
+    }
+  }
+
+  .hamburger-menu{
+    width:400px;
+    background-color:var(--bs-secondary);
+    color:white;
+    z-index: 1;
+  }

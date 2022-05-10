@@ -1,0 +1,18 @@
+{% extends 'layouts/base.html' %}
+{% block page_title %}Home{% endblock %}
+
+{% block content %}
+<div class="row p-4">
+    <div class="col-lg-3">
+        {% if children_categories %}
+        <p>Sottocategorie</p>
+        <ul class="list-group">            
+            {% for cat in children_categories %}
+            <li class="list-group-item"><a href="{% url 'categoria' permalink=cat.slug %}">{{cat.name}}</a></li>
+            {% endfor %}
+        </ul>         
+        {% endif %}                
+    </div>
+    <div class="col-lg-9"></div>
+</div>
+{% endblock %}
