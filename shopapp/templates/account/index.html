@@ -6,5 +6,8 @@
     <p>Bentornato {{user.first_name}} {{user.last_name}}</p>
     <a class='btn btn-light' href="{% url 'logout' %}"><i class="bi bi-box-arrow-left pe-2"></i>
         Logout</a>
+    <a class='btn btn-info' href="{% url 'invia-messaggio' %}"><i class="bi bi-envelope pe-2"></i>
+
+            Inviaci un messaggio</a>
 </div>
 {% endblock %}

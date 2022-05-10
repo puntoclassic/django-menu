@@ -1,7 +1,4 @@
-from django.contrib import admin
 from django.urls import path, re_path
-from django.contrib.auth import views as auth_views
-
 from shopapp.views import *
 
 urlpatterns = [   
@@ -13,7 +10,9 @@ urlpatterns = [
     path('account/recupera-password/ok', CustomPasswordResetDone.as_view(),name='password_reset_done'),
     path('account/recupera-password/conferma/<uidb64>/<token>/',
        CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('account', DashboardView.as_view(), name='profilo'),
+    path('account',AccountView.as_view(), name='account'),
     path('account/reset-password/completato',CustomPasswordResetCompleted.as_view(),name='password_reset_complete'),
-    re_path(r'^categorie/(?P<permalink>.*)$',CategoriaListView.as_view(),name='categoria')
+    re_path(r'^categorie/(?P<permalink>.*)$',CategoriaListView.as_view(),name='categoria'),
+    path('account/form-contatto',AccountInviaMessaggio.as_view(),name='invia-messaggio'),
+    path('account/form-contatto/ok',AccountInviaMessaggioDone.as_view(),name='invia-messaggio-ok')
 ]

@@ -41,3 +41,15 @@ class CustomPasswordRecoveryForm(PasswordResetForm):
         max_length=254,
         widget=forms.EmailInput(attrs={"autocomplete": "email","class":"form-control"}),
     )
+
+class ContactForm(forms.Form):
+    first_name = forms.CharField(label="Nome",disabled=True,required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
+    last_name = forms.CharField(label="Cognome",disabled=True,required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
+    email = forms.EmailField(
+        label="Email", 
+        max_length=254,
+        widget=forms.EmailInput(attrs={"autocomplete": "email","class":"form-control"}),
+    )
+    corpo =  forms.CharField(widget=forms.Textarea(attrs={"class":"form-control"}),)
+
+    

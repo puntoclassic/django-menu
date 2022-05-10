@@ -1,9 +1,12 @@
+
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from shopapp.forms import CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
+from shopapp.forms import ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Category
@@ -15,7 +18,7 @@ class HomeView(TemplateView):
 class CustomLoginView(LoginView):
     template_name = "login.html"
     form_class = CustomLoginForm
-    redirect_url = "/account"
+    redirect_url = reverse_lazy('account')
 
 class CustomSignInView(generic.CreateView):
     template_name = "signin.html"
@@ -40,9 +43,8 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 class CustomPasswordResetCompleted(TemplateView):
     template_name = "reset-password-completato.html"
 
-class DashboardView(LoginRequiredMixin,TemplateView):
-    template_name = "dashboard.html"
-    login_url = '/account/login'
+class AccountView(LoginRequiredMixin,TemplateView):
+    template_name = "account/index.html"
     redirect_field_name = 'redirect_to'
 
 class CategoriaListView(TemplateView):
@@ -57,4 +59,23 @@ class CategoriaListView(TemplateView):
         context_data = super().get_context_data(**kwargs)
         context_data["children_categories"] = self.children_categories
         return context_data
+
     
+class AccountInviaMessaggio(LoginRequiredMixin,FormView):
+    template_name = 'account/form-contatto.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('invia-messaggio-ok')
+
+    def get(self, request, *args, **kwargs):
+        print("Called")
+        self.initial["first_name"] = request.user.first_name
+        self.initial["last_name"] = request.user.last_name
+        self.initial["email"] = request.user.email
+
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):      
+        return super().form_valid(form)
+
+class AccountInviaMessaggioDone(LoginRequiredMixin,TemplateView):
+    template_name = 'account/form-contatto-ok.html'
