@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mptt',
     'django_object_actions',
-    'shopapp'
+    'commerce'
 ]
 
 MIDDLEWARE = [

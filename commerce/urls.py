@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from shopapp.views import *
+from commerce.views import *
 
 urlpatterns = [   
     path('',HomeView.as_view(),name='home'),

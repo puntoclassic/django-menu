@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, 
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from shopapp.forms import ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
+from commerce.forms import ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin

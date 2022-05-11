@@ -1,7 +1,7 @@
 from django.contrib import admin
-from shopapp.actions import manufacturers_download_logo
+from commerce.actions import manufacturers_download_logo
 
-from shopapp.models import Category, Manufacturer
+from commerce.models import Category, Manufacturer
 
 # Register your models here.
 @admin.register(Category)
