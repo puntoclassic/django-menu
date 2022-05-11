@@ -2,10 +2,12 @@ from django.contrib import admin
 from commerce.actions import manufacturers_download_logo
 
 from commerce.models import Category, Manufacturer
+from mptt.admin import MPTTModelAdmin
+
 
 # Register your models here.
 @admin.register(Category)
-class AdminCategory(admin.ModelAdmin):
+class AdminCategory(MPTTModelAdmin):
     list_display = ('name','slug',)
 
 @admin.register(Manufacturer)
