@@ -6,5 +6,5 @@ from commerce.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('shopapp.urls'))
+    path('',include('commerce.urls'))
 ]

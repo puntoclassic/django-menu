@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mptt',
     'django_object_actions',
-    'commerce'
+    'commerce',
+    'icecat'
 ]
 
 MIDDLEWARE = [
