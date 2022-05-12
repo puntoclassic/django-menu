@@ -28,7 +28,6 @@ class IcecatManufacturerHasLogoFilter(SimpleListFilter):
         ]
 
     def queryset(self, request, queryset):
-        print(queryset.model)
         if self.value() == 'yes':
             return queryset.exclude(logo_url__iexact="")
         if self.value():
