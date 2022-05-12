@@ -4,6 +4,7 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.text import slugify
 
+
 # Create your models here.
 class Category(MPTTModel):
     name = models.CharField(max_length=100,blank=False,null=False,verbose_name='Nome')

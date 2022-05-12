@@ -16,9 +16,10 @@ class IcecatCategory(MPTTModel):
         verbose_name_plural = "categorie Icecat"
         verbose_name = "categoria Icecat"
 
-class IcecatManufacturer(MPTTModel):
-    name = models.CharField(max_length=255,blank=False,null=False)
+class IcecatManufacturer(models.Model):
+    name = models.CharField(max_length=255,blank=False,null=False,verbose_name='Nome')
     icecat_id = models.IntegerField(blank=False,null=False)   
+    logo_url = models.URLField(blank=True,null=True)
     shop_manufacturer= models.ForeignKey(Manufacturer,on_delete=models.SET_NULL,blank=True,null=True,related_name='marche_icecat')
 
     def __str__(self) -> str:

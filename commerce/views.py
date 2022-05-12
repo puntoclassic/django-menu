@@ -13,7 +13,7 @@ from .models import Category
 
 # Create your views here.
 class HomeView(TemplateView):
-    template_name = "index.html"
+    template_name = "index.html"    
 
 class CustomLoginView(LoginView):
     template_name = "login.html"
