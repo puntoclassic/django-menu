@@ -3,7 +3,9 @@ from tokenize import blank_re
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.text import slugify
+import requests
 
+from shop.settings import BASE_DIR
 
 # Create your models here.
 class Category(MPTTModel):
@@ -38,7 +40,15 @@ class Manufacturer(models.Model):
 
     def download_logo(self):
         if self.imageUrl != "" or self.imageUrl is not None:
-            pass
+            content = requests.get(self.imageUrl).content
+            if content:
+                extension = self.imageUrl.split("/")[-1].split(".")[1]
+                image_file_path = f"public/assets/images/m/{self.id}.{extension}"
+                image_file = open(image_file_path,"wb")
+                image_file.write(content)
+                image_file.close()
+                self.image = image_file_path
+                self.save()
         pass
 
     class Meta:

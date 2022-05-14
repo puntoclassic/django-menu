@@ -1,6 +1,8 @@
 import gzip
 from hashlib import new
 from django.contrib import admin
+
+from commerce.models import Category, Manufacturer
 from .models import IcecatCategory, IcecatManufacturer
 from mptt.admin import MPTTModelAdmin
 from django.contrib import messages
@@ -79,9 +81,31 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
                    new_man.logo_url = supplier.attrib["LogoMediumPic"]
                    new_man.save()
             os.remove(path_gz)
-            messages.add_message(request,messages.SUCCESS,"Marche Icecat scaricate con successo")
-        
+            messages.add_message(request,messages.SUCCESS,"Marche Icecat scaricate con successo")        
     download_icecat_manufacturer.label = "Scarica"
+
+    def import_manufacturer(self, request, obj):
+
+        #check if exists 
+        if Manufacturer.objects.filter(name__iexact=obj.name).count() > 0:
+            messages.add_message(request,messages.WARNING,f"Esiste già una marca con questo nome {obj.name}")  
+        elif obj.shop_manufacturer is not None:
+            messages.add_message(request,messages.WARNING,f"Stai provando a creare una marca che risulta già abbinata")  
+        else:
+            cat = Manufacturer()
+            cat.name = obj.name
+            cat.imageUrl = obj.logo_url
+            cat.save()
+
+            obj.shop_manufacturer = cat
+            obj.save()
+
+            messages.add_message(request,messages.SUCCESS,f"Categoria creata e abbinata")  
+
+             
+    import_manufacturer.label = "Importa marca"
+
+    change_actions = ("import_manufacturer",)
 
     changelist_actions = ("download_icecat_manufacturer",)
 

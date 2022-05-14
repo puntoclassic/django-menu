@@ -20,7 +20,7 @@ class IcecatManufacturer(models.Model):
     name = models.CharField(max_length=255,blank=False,null=False,verbose_name='Nome')
     icecat_id = models.IntegerField(blank=False,null=False)   
     logo_url = models.URLField(blank=True,null=True)
-    shop_manufacturer= models.ForeignKey(Manufacturer,on_delete=models.SET_NULL,blank=True,null=True,related_name='marche_icecat')
+    shop_manufacturer= models.ForeignKey(Manufacturer,on_delete=models.SET_NULL,blank=True,null=True,related_name='marche_icecat',verbose_name='Corrispondenza marca Negozio')
 
     def __str__(self) -> str:
         return f"{self.name} ({self.icecat_id})"

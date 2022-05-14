@@ -5,6 +5,6 @@ from django.contrib.auth import views as auth_views
 from commerce.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('webmaster/', admin.site.urls),
     path('',include('commerce.urls'))
 ]
