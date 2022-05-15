@@ -1,9 +1,7 @@
 import imp
-from .models import Category, GeneraliModel
-
-
+from .models import GeneraliModel
 
 def base_info(request):
     return {
-        "base_info":GeneraliModel.objects.get()
+        "base_info":GeneraliModel.get_solo()
     }

@@ -67,7 +67,6 @@ class AccountInviaMessaggio(LoginRequiredMixin,FormView):
     success_url = reverse_lazy('invia-messaggio-ok')
 
     def get(self, request, *args, **kwargs):
-        print("Called")
         self.initial["first_name"] = request.user.first_name
         self.initial["last_name"] = request.user.last_name
         self.initial["email"] = request.user.email
