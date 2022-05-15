@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'mptt',
     'django_object_actions',
     'commerce',
-    'icecat'
+    'icecat',
+    'impostazioni',
+    'solo'
 ]
 
 MIDDLEWARE = [
@@ -78,7 +80,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'commerce.shop_context_processor.base_categories'
+                'commerce.context_processor.base_categories',
+                'impostazioni.context_processor.base_info'
+
             ],
         },
     },

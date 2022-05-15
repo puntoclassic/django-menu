@@ -59,3 +59,5 @@ class Manufacturer(models.Model):
         return self.name
 
 
+
+
