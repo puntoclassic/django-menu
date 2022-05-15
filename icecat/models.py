@@ -16,6 +16,12 @@ class IcecatCategory(MPTTModel):
         verbose_name_plural = "categorie Icecat"
         verbose_name = "categoria Icecat"
 
+class IcecatManufacturerExistsOnShopException(Exception):
+    pass
+
+class IcecatManufacturerAlreadyMatchedException(Exception):
+    pass
+
 class IcecatManufacturer(models.Model):
     name = models.CharField(max_length=255,blank=False,null=False,verbose_name='Nome')
     icecat_id = models.IntegerField(blank=False,null=False)   
@@ -23,7 +29,22 @@ class IcecatManufacturer(models.Model):
     shop_manufacturer= models.ForeignKey(Manufacturer,on_delete=models.SET_NULL,blank=True,null=True,related_name='marche_icecat',verbose_name='Corrispondenza marca Negozio')
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.icecat_id})"
+        return f"{self.name} ({self.icecat_id})"   
+
+    def create_shop_manufacturer(self):
+        if Manufacturer.objects.filter(name__iexact=self.name).count() > 0:
+            raise IcecatManufacturerExistsOnShopException()
+        elif self.shop_manufacturer is not None:
+            raise IcecatManufacturerAlreadyMatchedException()
+        else:
+            cat = Manufacturer()
+            cat.name = self.name
+            cat.imageUrl = self.logo_url
+            cat.save()
+
+            self.shop_manufacturer = cat
+            self.save()
+            return True
 
     class Meta:
         verbose_name_plural = "marche Icecat"

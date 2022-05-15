@@ -3,7 +3,7 @@ from hashlib import new
 from django.contrib import admin
 
 from commerce.models import Category, Manufacturer
-from .models import IcecatCategory, IcecatManufacturer
+from .models import IcecatCategory, IcecatManufacturer, IcecatManufacturerAlreadyMatchedException, IcecatManufacturerExistsOnShopException
 from mptt.admin import MPTTModelAdmin
 from django.contrib import messages
 from django_object_actions import DjangoObjectActions
@@ -85,23 +85,13 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
     download_icecat_manufacturer.label = "Scarica"
 
     def import_manufacturer(self, request, obj):
-
-        #check if exists 
-        if Manufacturer.objects.filter(name__iexact=obj.name).count() > 0:
-            messages.add_message(request,messages.WARNING,f"Esiste già una marca con questo nome {obj.name}")  
-        elif obj.shop_manufacturer is not None:
+        try:
+            obj.create_shop_manufacturer()
+            messages.add_message(request,messages.SUCCESS,f"Categoria creata e abbinata") 
+        except IcecatManufacturerAlreadyMatchedException:
             messages.add_message(request,messages.WARNING,f"Stai provando a creare una marca che risulta già abbinata")  
-        else:
-            cat = Manufacturer()
-            cat.name = obj.name
-            cat.imageUrl = obj.logo_url
-            cat.save()
-
-            obj.shop_manufacturer = cat
-            obj.save()
-
-            messages.add_message(request,messages.SUCCESS,f"Categoria creata e abbinata")  
-
+        except IcecatManufacturerExistsOnShopException:
+            messages.add_message(request,messages.WARNING,f"Esiste già una marca con questo nome {obj.name}")  
              
     import_manufacturer.label = "Importa marca"
 
