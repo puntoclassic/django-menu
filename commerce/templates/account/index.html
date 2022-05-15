@@ -3,9 +3,85 @@
 
 {% block content %}
 <div class="p-4">
-    <p>Bentornato {{user.first_name}} {{user.last_name}}</p>
-    <a class='btn btn-light' href="{% url 'logout' %}"><i class="bi bi-box-arrow-left pe-2"></i>
-        Logout</a>
+    <div class="row">
+        <div class="col-12">
+            <p>Bentornato {{user.first_name}} {{user.last_name}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 pt-1 pe-1 ps-1">
+            <div class="card">
+                <div class="card-body">
+                  <div class="row ">
+                      <div class="col-3 d-flex justify-content-end align-items-center">
+                        <i class="bi bi-person-badge"></i>
+                      </div>
+                      <div class="col-9 d-flex justify-content-start align-items-center">
+                        Le mie informazioni
+                      </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="col-lg-3 pt-1 pe-1 ps-1">
+          <div class="card">
+              <div class="card-body">
+                <div class="row ">
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                      <i class="bi bi-bag"></i>
+                    </div>
+                    <div class="col-9 d-flex justify-content-start align-items-center">
+                      I miei ordini
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-lg-3 pt-1 pe-1 ps-1">
+          <div class="card">
+              <div class="card-body">
+                <div class="row ">
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                      <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="col-9 d-flex justify-content-start align-items-center">
+                      Le mie richieste
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-lg-3 pt-1 pe-1 ps-1">
+          <div class="card">
+              <div class="card-body">
+                <div class="row ">
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                      <i class="bi bi-truck"></i>
+                    </div>
+                    <div class="col-9 d-flex justify-content-start align-items-center">
+                      I miei indirizzi
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-lg-3 pt-1 pe-1 ps-1">
+          <div class="card">
+              <div class="card-body">
+                <div class="row ">
+                    <div class="col-3 d-flex justify-content-end align-items-center">
+                      <i class="bi bi-file-earmark-pdf"></i>
+                    </div>
+                    <div class="col-9 d-flex justify-content-start align-items-center">
+                      Le mie richieste di reso
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    -->
     
 </div>
 {% endblock %}
