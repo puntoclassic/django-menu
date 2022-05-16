@@ -32,6 +32,8 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm 
     model = CommerceUser
 
+    list_display = ('first_name','last_name','email','tipologia','is_staff',)
+
     fieldsets = UserAdmin.fieldsets + (
             ('Informazioni cliente', {'fields': ('tipologia',)}),
     )
