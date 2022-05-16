@@ -4,7 +4,7 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.utils.text import slugify
 import requests
-
+from django.contrib.auth.models import AbstractUser
 from shop.settings import BASE_DIR
 
 # Create your models here.
@@ -59,5 +59,11 @@ class Manufacturer(models.Model):
         return self.name
 
 
-
+class CommerceUser(AbstractUser):
+    tipologia = models.CharField(choices=[
+        ('PRIVATO','Privato'),
+        ('AZIENDA','Azienda'),
+        ('PUBBLICA_AMMINISTRAZIONE','Pubblica Amministrazione'),
+        ('ASSOCIAZIONE','Associazione')
+    ],blank=False,null=False,default='Privato',max_length=200)
 

@@ -1,5 +1,7 @@
-from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordResetForm, UserChangeForm
 from django import forms
+
+from commerce.models import CommerceUser
 
 
 class CustomLoginForm(AuthenticationForm):
@@ -10,7 +12,7 @@ class CustomLoginForm(AuthenticationForm):
         widget=forms.PasswordInput(attrs={"autocomplete": "current-password","class":'form-control'}),
     )
 
-class CustomSignInForm(UserCreationForm):
+class CustomSignInForm(UserCreationForm):   
     error_css_class = "is-invalid"
     username = UsernameField(widget=forms.TextInput(attrs={"autofocus": True,"class":'form-control'}))
     password1 = forms.CharField(
@@ -25,6 +27,16 @@ class CustomSignInForm(UserCreationForm):
     )
     first_name = forms.CharField(required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
     last_name = forms.CharField(required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
+    tipologia = forms.ChoiceField(required=True,choices=[
+        ('PRIVATO','Privato'),
+        ('AZIENDA','Azienda'),
+        ('PUBBLICA_AMMINISTRAZIONE','Pubblica Amministrazione'),
+        ('ASSOCIAZIONE','Associazione')
+    ],widget=forms.Select(attrs={"class":'form-control'}))
+
+    class Meta(UserCreationForm):
+        model = CommerceUser
+        fields = UserCreationForm.Meta.fields + ('tipologia',)
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -52,4 +64,9 @@ class ContactForm(forms.Form):
     )
     corpo =  forms.CharField(widget=forms.Textarea(attrs={"class":"form-control"}),)
 
-    
+
+
+class CustomUserChangeForm(UserChangeForm):   
+    class Meta:
+        model = CommerceUser
+        fields = UserChangeForm.Meta.fields

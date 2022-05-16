@@ -89,3 +89,9 @@ class AccountInviaMessaggio(LoginRequiredMixin,FormView):
 
 class AccountInviaMessaggioDone(LoginRequiredMixin,TemplateView):
     template_name = 'account/form-contatto-ok.html'
+
+class AccountInformazioniProfiloView(TemplateView):
+    template_name = "account/informazioni-profilo-view.html"
+
+class AccountInformazioniProfiloEdit(TemplateView):
+    template_name = "account/informazioni-profilo-edit.html"
