@@ -1,7 +1,7 @@
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, DetailView
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView, PasswordResetDoneView, PasswordChangeDoneView
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
@@ -29,20 +29,20 @@ class CustomSignInView(generic.CreateView):
 class CustomLogoutView(LogoutView):
     template_name = "logout.html"
 
-class CustomPasswordRecoveryView(PasswordResetView):
+class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordRecoveryForm
     subject_template_name = "emails/recupera-password-subject.html"
     email_template_name = "emails/recupera-password-body.html"
-    template_name = "recupera-password.html"
+    template_name = "account/recupera-password/recupera-password-1.html"
 
-class CustomPasswordResetDone(TemplateView):
-    template_name = "recupera-password-ok.html"
+class CustomPasswordResetDone(PasswordResetDoneView):
+    template_name = "account/recupera-password/recupera-password-2.html"
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-        template_name = "recupera-password-conferma.html"
+    template_name = "account/recupera-password/recupera-password-3.html"
 
-class CustomPasswordResetCompleted(TemplateView):
-    template_name = "reset-password-completato.html"
+class CustomPasswordResetCompleted(PasswordChangeDoneView):
+    template_name = "account/recupera-password/recupera-password-4.html"
 
 class AccountView(LoginRequiredMixin,TemplateView):
     template_name = "account/index.html"
@@ -73,7 +73,7 @@ class CategoriaListView(DetailView):
 
     
 class AccountInviaMessaggio(LoginRequiredMixin,FormView):
-    template_name = 'account/form-contatto.html'
+    template_name = 'account/form-contatto/form-contatto-1.html'
     form_class = ContactForm
     success_url = reverse_lazy('invia-messaggio-ok')
 
@@ -88,13 +88,17 @@ class AccountInviaMessaggio(LoginRequiredMixin,FormView):
         return super().form_valid(form)
 
 class AccountInviaMessaggioDone(LoginRequiredMixin,TemplateView):
-    template_name = 'account/form-contatto-ok.html'
+    template_name = 'account/form-contatto/form-contatto-2.html'
 
 class AccountInformazioniProfiloView(TemplateView):
-    template_name = "account/informazioni-profilo-view.html"
+    template_name = "account/informazioni-profilo/view.html"
 
 class AccountInformazioniProfiloEdit(TemplateView):
-    template_name = "account/informazioni-profilo-edit.html"
+    template_name = "account/informazioni-profilo/edit.html"
 
 class AccountCambiaPassword(PasswordChangeView):
-    template_name = "account/cambia-password.html"
+    template_name = "account/cambia-password/cambia-password-1.html"
+    success_url = reverse_lazy("cambia-password-done")
+
+class AccountCambiaPasswordDone(TemplateView):
+    template_name = "account/cambia-password/cambia-password-2.html"
