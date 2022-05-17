@@ -1,7 +1,7 @@
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, DetailView
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
@@ -95,3 +95,6 @@ class AccountInformazioniProfiloView(TemplateView):
 
 class AccountInformazioniProfiloEdit(TemplateView):
     template_name = "account/informazioni-profilo-edit.html"
+
+class AccountCambiaPassword(PasswordChangeView):
+    template_name = "account/cambia-password.html"

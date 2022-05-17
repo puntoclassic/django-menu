@@ -16,5 +16,6 @@ urlpatterns = [
     path('account/form-contatto',AccountInviaMessaggio.as_view(),name='invia-messaggio'),
     path('account/form-contatto/ok',AccountInviaMessaggioDone.as_view(),name='invia-messaggio-ok'),
     path('account/le-mie-informazioni/',AccountInformazioniProfiloView.as_view(),name='le-mie-informazioni-view'),
-    path('account/le-mie-informazioni/edit',AccountInformazioniProfiloEdit.as_view(),name='le-mie-informazioni-edit')
+    path('account/le-mie-informazioni/edit',AccountInformazioniProfiloEdit.as_view(),name='le-mie-informazioni-edit'),
+    path('account/cambia-password',AccountCambiaPassword.as_view(),name='cambia-password')
 ]
