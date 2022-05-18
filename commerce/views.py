@@ -1,16 +1,17 @@
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, UpdateView
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView, PasswordResetDoneView, PasswordChangeDoneView
 from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.contrib import messages
 
-from commerce.forms import ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
+from commerce.forms import AccountInformazioniEditForm, ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Category
+from .models import Category, CommerceUser
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -93,8 +94,19 @@ class AccountInviaMessaggioDone(LoginRequiredMixin,TemplateView):
 class AccountInformazioniProfiloView(TemplateView):
     template_name = "account/informazioni-profilo/view.html"
 
-class AccountInformazioniProfiloEdit(TemplateView):
+class AccountInformazioniProfiloEdit(UpdateView):
+    model = CommerceUser
+    form_class = AccountInformazioniEditForm
     template_name = "account/informazioni-profilo/edit.html"
+
+    def form_valid(self, form):
+        messages.success(self.request,message="Informazioni aggiornate con successo!")
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse('le-mie-informazioni-edit',kwargs={'pk':self.object.id})
+
+
 
 class AccountCambiaPassword(PasswordChangeView):
     template_name = "account/cambia-password/cambia-password-1.html"

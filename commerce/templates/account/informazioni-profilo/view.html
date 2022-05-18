@@ -1,51 +1,57 @@
 {% extends 'layouts/base.html' %}
 {% block page_title %}Le mie informazioni{% endblock %}
-
 {% block content %}
-<div class="p-4">
-    <div class="row">
-        <div class="col-12">
-            <h4>Le mie informazioni</h4>
+    <div class="p-4">
+        <div class="row">
+            <div class="col-12">
+                <h4>Le mie informazioni</h4>
+            </div>
         </div>
-    </div>
-    <div class="row pt-4">
-        <div class="col-lg-6">
-            <div class="mb-3 row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Nome</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="staticEmail" value="{{user.first_name}}">
+        <div class="row pt-4">
+            <div class="col-lg-6">
+                <div class="mb-3 row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label">Nome</label>
+                    <div class="col-sm-10">
+                        <input type="text"
+                               readonly
+                               class="form-control"
+                               id="staticEmail"
+                               value="{{ user.first_name }}">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="staticEmail" class="col-sm-2 col-form-label">Cognome</label>
+                    <div class="col-sm-10">
+                        <input type="text"
+                               readonly
+                               class="form-control"
+                               id="staticEmail"
+                               value="{{ user.last_name }}">
+                    </div>
                 </div>
             </div>
-            <div class="mb-3 row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Cognome</label>
-                <div class="col-sm-10">
-                  <input type="text" readonly class="form-control" id="staticEmail" value="{{user.last_name}}">
-                </div>
-            </div>            
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a href="{% url 'le-mie-informazioni-edit' pk=user.id %}"
+                   class="btn btn-info">
+                    <i class="bi bi-pencil-square"></i>
+                    Clicca per modificare
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-4">
+                <h4>Sicurezza account</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-2">
+                <a href="{% url 'cambia-password' %}" class="btn btn-secondary">
+                    <i class="bi bi-fingerprint"></i>
+                    Modifica la password
+                </a>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <a href="{% url 'le-mie-informazioni-edit' %}" class="btn btn-info">
-                <i class="bi bi-pencil-square"></i>
-                Clicca per modificare
-            </a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 mt-4">
-            <h4>Sicurezza account</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 mt-2">
-            <a href="{% url 'cambia-password' %}" class="btn btn-secondary">
-                <i class="bi bi-fingerprint"></i>
-                Modifica la password
-            </a>
-        </div>
-    </div>
-   
-    
-</div>
 {% endblock %}

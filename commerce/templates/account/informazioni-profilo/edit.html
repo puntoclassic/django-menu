@@ -4,34 +4,54 @@
 {% endblock page_title %}
 {% block content %}
     <div class="p-4">
+        {% if messages %}
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-success" role="alert">
+                        {% for message in messages %}{{ message }}{% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-12">
                 <h4>Le mie informazioni</h4>
             </div>
         </div>
-        <div class="row pt-4">
-            <div class="col-lg-6">
-                <div class="mb-3 row">
-                    <label for="staticEmail" class="col-sm-2 col-form-label">Nome</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" value="{{ user.first_name }}"/>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row pt-4">
+                <div class="col-lg-6">
+                    <div class="mb-3 row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Nome</label>
+                        <div class="col-sm-10">
+                            <input type="text"
+                                   name="first_name"
+                                   class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                   value="{{ form.first_name.value }}"/>
+                            {% if form.first_name.errors %}<div class="invalid-feedback">{{ form.first_name.errors }}</div>{% endif %}
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="staticEmail" class="col-sm-2 col-form-label">Cognome</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" value="{{ user.last_name }}"/>
+                    <div class="mb-3 row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Cognome</label>
+                        <div class="col-sm-10">
+                            <input type="text"
+                                   name="last_name"
+                                   class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                   value="{{ form.last_name.value }}"/>
+                            {% if form.last_name.errors %}<div class="invalid-feedback">{{ form.last_name.errors }}</div>{% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <a href="" class="btn btn-success">
-                    <i class="bi bi-pencil-square"></i>
-                    Salva
-                </a>
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-pencil-square"></i>
+                        Salva
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 {% endblock content %}

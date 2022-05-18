@@ -65,8 +65,17 @@ class ContactForm(forms.Form):
     corpo =  forms.CharField(widget=forms.Textarea(attrs={"class":"form-control"}),)
 
 
-
 class CustomUserChangeForm(UserChangeForm):   
     class Meta:
         model = CommerceUser
         fields = UserChangeForm.Meta.fields
+
+class AccountInformazioniEditForm(forms.ModelForm):
+    first_name = forms.CharField(label="Nome",disabled=False,required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
+    last_name = forms.CharField(label="Cognome",disabled=False,required=True,widget=forms.TextInput(attrs={"class":'form-control'}))
+
+    class Meta:
+        model = CommerceUser
+        fields = ('first_name','last_name',)
+
+    
