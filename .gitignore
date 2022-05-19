@@ -3,3 +3,4 @@ db.sqlite3
 /shopenv
 /external_data
 specifiche.txt
+/public/assets

@@ -86,7 +86,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'commerce.context_processor.base_categories',
-                'commerce.context_processor.pygisblog_feed',
                 'impostazioni.context_processor.base_info'
             ],
         },
