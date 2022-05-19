@@ -3,11 +3,16 @@ from mptt.models import MPTTModel, TreeForeignKey
 from commerce.models import Category, Manufacturer
 
 # Create your models here.
+
+
 class IcecatCategory(MPTTModel):
-    name = models.CharField(max_length=255,blank=False,null=False)
-    icecat_id = models.IntegerField(blank=False,null=False)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children',verbose_name='Categoria padre')
-    shop_category = models.ForeignKey(Category,on_delete=models.SET_NULL,blank=True,null=True,related_name='categorie_icecat')
+    name = models.CharField(max_length=255, blank=False, null=False)
+    icecat_id = models.IntegerField(blank=False, null=False)
+    parent_icecat_id = models.IntegerField(blank=True, null=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
+                            blank=True, related_name='children', verbose_name='Categoria padre')
+    shop_category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, blank=True, null=True, related_name='categorie_icecat')
 
     def __str__(self) -> str:
         return f"{self.name} ({self.icecat_id})"
@@ -16,20 +21,25 @@ class IcecatCategory(MPTTModel):
         verbose_name_plural = "categorie Icecat"
         verbose_name = "categoria Icecat"
 
+
 class IcecatManufacturerExistsOnShopException(Exception):
     pass
+
 
 class IcecatManufacturerAlreadyMatchedException(Exception):
     pass
 
+
 class IcecatManufacturer(models.Model):
-    name = models.CharField(max_length=255,blank=False,null=False,verbose_name='Nome')
-    icecat_id = models.IntegerField(blank=False,null=False)   
-    logo_url = models.URLField(blank=True,null=True)
-    shop_manufacturer= models.ForeignKey(Manufacturer,on_delete=models.SET_NULL,blank=True,null=True,related_name='marche_icecat',verbose_name='Corrispondenza marca Negozio')
+    name = models.CharField(max_length=255, blank=False,
+                            null=False, verbose_name='Nome')
+    icecat_id = models.IntegerField(blank=False, null=False)
+    logo_url = models.URLField(blank=True, null=True)
+    shop_manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, blank=True,
+                                          null=True, related_name='marche_icecat', verbose_name='Corrispondenza marca Negozio')
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.icecat_id})"   
+        return f"{self.name} ({self.icecat_id})"
 
     def create_shop_manufacturer(self):
         if Manufacturer.objects.filter(name__iexact=self.name).count() > 0:
