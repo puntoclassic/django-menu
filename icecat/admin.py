@@ -3,7 +3,7 @@ from hashlib import new
 from django.contrib import admin
 
 from commerce.models import Category, Manufacturer
-from icecat.actions import connect_icecat_categories, download_icecat_categories_file, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
+from icecat.actions import connect_icecat_categories, download_icecat_categories_file, import_icecat_manufacturers, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
 from .models import IcecatCategory, IcecatManufacturer, IcecatManufacturerAlreadyMatchedException, IcecatManufacturerExistsOnShopException
 from mptt.admin import MPTTModelAdmin
 from django.contrib import messages
@@ -74,36 +74,11 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
     preview_logo.allow_tags = True
 
     # actions
-    def download_icecat_manufacturer(self, request, obj):
-        username = env("ICECAT_USERNAME")
-        password = env("ICECAT_PASSWORD")
-        link = f"https://{username}:{password}@data.icecat.biz/export/freexml.int/refs/SuppliersList.xml.gz"
-        path_gz = f"{BASE_DIR}/external_data/SuppliersList.xml.gz"
-        xml_path = f"{BASE_DIR}/external_data/SuppliersList.xml"
-        content = requests.get(link).content
-        if content:
-            file_gz = open(path_gz, "wb")
-            file_gz.write(content)
-            file_gz = gzip.open(path_gz, "rb")
-
-            file_xml = open(xml_path, "wb")
-            file_xml.write(file_gz.read())
-            file_xml.close()
-
-            tree = ET.parse(xml_path)
-            root = tree.getroot()
-
-            for supplier in root.iter('Supplier'):
-                if IcecatManufacturer.objects.filter(icecat_id=supplier.attrib["ID"]).count() == 0:
-                    new_man = IcecatManufacturer()
-                    new_man.icecat_id = supplier.attrib["ID"]
-                    new_man.name = supplier.attrib["Name"]
-                    new_man.logo_url = supplier.attrib["LogoMediumPic"]
-                    new_man.save()
-            os.remove(path_gz)
+    def download_icecat_manufacturers(self, request, obj):
+        if import_icecat_manufacturers():
             messages.add_message(request, messages.SUCCESS,
                                  "Marche Icecat scaricate con successo")
-    download_icecat_manufacturer.label = "Scarica"
+    download_icecat_manufacturers.label = "Scarica"
 
     def import_manufacturer(self, request, obj):
         try:
@@ -121,4 +96,4 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
 
     change_actions = ("import_manufacturer",)
 
-    changelist_actions = ("download_icecat_manufacturer",)
+    changelist_actions = ("download_icecat_manufacturers",)

@@ -39,7 +39,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1"
 ]
 
-AUTH_USER_MODEL = 'commerce.CommerceUser' 
+AUTH_USER_MODEL = 'commerce.CommerceUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -86,8 +86,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'commerce.context_processor.base_categories',
+                'commerce.context_processor.pygisblog_feed',
                 'impostazioni.context_processor.base_info'
-
             ],
         },
     },
@@ -154,7 +154,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = 'account' 
+LOGIN_REDIRECT_URL = 'account'
 AUTHENTICATION_BACKENDS = ['shop.utils.EmailBackend']
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env('EMAIL_HOST')
