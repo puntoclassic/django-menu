@@ -120,3 +120,13 @@ def import_icecat_manufacturers_selected(modeladmin, request, queryset):
         except:
             pass
     messages.success(request, "Marche importate con successo")
+
+
+@admin.action(description='Importa categorie selezionate')
+def import_icecat_category_selected(modeladmin, request, queryset):
+    for item in queryset:
+        try:
+            item.create_shop_category()
+        except:
+            pass
+    messages.success(request, "Categorie importate con successo")

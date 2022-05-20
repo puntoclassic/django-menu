@@ -5,6 +5,14 @@ from commerce.models import Category, Manufacturer
 # Create your models here.
 
 
+class IcecatCategoryExistsOnShopException(Exception):
+    pass
+
+
+class IcecatCategoryAlreadyMatchedException(Exception):
+    pass
+
+
 class IcecatCategory(MPTTModel):
     name = models.CharField(max_length=255, blank=False, null=False)
     icecat_id = models.IntegerField(blank=False, null=False)
@@ -13,6 +21,25 @@ class IcecatCategory(MPTTModel):
                             blank=True, related_name='children', verbose_name='Categoria padre')
     shop_category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True, related_name='categorie_icecat')
+
+    def create_shop_category(self):
+        if Category.objects.filter(name__iexact=self.name).exists():
+            raise IcecatCategoryExistsOnShopException()
+        elif self.shop_category is not None:
+            raise IcecatCategoryAlreadyMatchedException()
+        else:
+            cat = Category()
+            cat.name = self.name
+
+            if self.parent:
+                if self.parent.shop_category:
+                    cat.parent = self.parent.shop_category
+
+            cat.save()
+
+            self.shop_category = cat
+            self.save()
+            return True
 
     def __str__(self) -> str:
         return f"{self.name} ({self.icecat_id})"
@@ -42,17 +69,17 @@ class IcecatManufacturer(models.Model):
         return f"{self.name} ({self.icecat_id})"
 
     def create_shop_manufacturer(self):
-        if Manufacturer.objects.filter(name__iexact=self.name).count() > 0:
+        if Manufacturer.objects.filter(name__iexact=self.name).exists():
             raise IcecatManufacturerExistsOnShopException()
         elif self.shop_manufacturer is not None:
             raise IcecatManufacturerAlreadyMatchedException()
         else:
-            cat = Manufacturer()
-            cat.name = self.name
-            cat.imageUrl = self.logo_url
-            cat.save()
+            man = Manufacturer()
+            man.name = self.name
+            man.imageUrl = self.logo_url
+            man.save()
 
-            self.shop_manufacturer = cat
+            self.shop_manufacturer = man
             self.save()
             return True
 
