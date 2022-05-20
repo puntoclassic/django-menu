@@ -1,3 +1,4 @@
+from django.contrib import admin, messages
 
 import gzip
 import os
@@ -109,3 +110,13 @@ def import_icecat_manufacturers():
         os.remove(path_gz)
         return True
     return False
+
+
+@admin.action(description='Importa marche selezionate')
+def import_icecat_manufacturers_selected(modeladmin, request, queryset):
+    for item in queryset:
+        try:
+            item.create_shop_manufacturer()
+        except:
+            pass
+    messages.success(request, "Marche importate con successo")

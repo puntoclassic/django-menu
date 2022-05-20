@@ -3,7 +3,7 @@ from hashlib import new
 from django.contrib import admin
 
 from commerce.models import Category, Manufacturer
-from icecat.actions import connect_icecat_categories, download_icecat_categories_file, import_icecat_manufacturers, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
+from icecat.actions import connect_icecat_categories, download_icecat_categories_file, import_icecat_manufacturers, import_icecat_manufacturers_selected, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
 from .models import IcecatCategory, IcecatManufacturer, IcecatManufacturerAlreadyMatchedException, IcecatManufacturerExistsOnShopException
 from mptt.admin import MPTTModelAdmin
 from django.contrib import messages
@@ -60,6 +60,7 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
     list_display = ('name', 'icecat_id', 'preview_logo',)
     list_filter = (IcecatManufacturerHasLogoFilter,)
     search_fields = ('name', 'icecat_id',)
+    actions = (import_icecat_manufacturers_selected,)
 
     @admin.display(description="Preview Logo")
     def preview_logo(self, obj):
