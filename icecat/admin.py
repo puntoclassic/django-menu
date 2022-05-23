@@ -1,21 +1,12 @@
-import gzip
-from hashlib import new
 from django.contrib import admin
 
-from commerce.models import Category, Manufacturer
-from icecat.actions import connect_icecat_categories, download_icecat_categories_file, import_icecat_category_selected, import_icecat_manufacturers, import_icecat_manufacturers_selected, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
+from icecat.actions import connect_icecat_categories, download_icecat_categories_file, import_icecat_category_selected, import_icecat_category_selected_withchildren, import_icecat_category_selected_withparents, import_icecat_category_withchildren, import_icecat_category_withparents, import_icecat_manufacturers, import_icecat_manufacturers_selected, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
+from icecat.filters import IcecatManufacturerHasLogoFilter
 from .models import IcecatCategory, IcecatCategoryAlreadyMatchedException, IcecatCategoryExistsOnShopException, IcecatManufacturer, IcecatManufacturerAlreadyMatchedException, IcecatManufacturerExistsOnShopException
-from mptt.admin import MPTTModelAdmin
 from django.contrib import messages
 from django_object_actions import DjangoObjectActions
-from shop.settings import BASE_DIR, env
-import requests
-import xml.etree.ElementTree as ET
-from django.contrib.admin import SimpleListFilter
 from django.utils.html import format_html
-import os
-
-# Register your models here.
+from mptt.admin import MPTTModelAdmin
 
 
 @admin.register(IcecatCategory)
@@ -23,9 +14,10 @@ class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
     list_display = ('name', 'icecat_id', 'parent',)
     search_fields = ('name', 'icecat_id',)
     ordering = ['icecat_id', ]
-    actions = (import_icecat_category_selected,)
+    actions = (import_icecat_category_selected,
+               import_icecat_category_selected_withchildren, import_icecat_category_selected_withparents)
 
-    def import_category(self, request, obj):
+    def action_import_category(self, request, obj):
         try:
             obj.create_shop_category()
             messages.add_message(request, messages.SUCCESS,
@@ -36,10 +28,10 @@ class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
         except IcecatCategoryExistsOnShopException:
             messages.add_message(
                 request, messages.WARNING, f"Esiste già una categoria con questo nome {obj.name}")
-    import_category.label = "Importa categoria"
+    action_import_category.label = "Importa categoria"
 
     # actions
-    def download_icecat_categories(self, request, obj):
+    def action_download_icecat_categories(self, request, obj):
         if download_icecat_categories_file():
             unzip_icecat_categories_file()
             parse_icecat_categories_file()
@@ -47,27 +39,23 @@ class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
             connect_icecat_categories()
             messages.add_message(request, messages.SUCCESS,
                                  "Categorie Icecat scaricate con successo")
-    download_icecat_categories.label = "Scarica"
+    action_download_icecat_categories.label = "Scarica"
 
-    change_actions = ("import_category",)
-    changelist_actions = ("download_icecat_categories",)
+    def action_import_icecat_category_withchildren(self, request, obj):
+        if import_icecat_category_withchildren(obj):
+            messages.add_message(request, messages.SUCCESS,
+                                 "Categoria con le sue sottocategorie importata")
+    action_import_icecat_category_withchildren.label = "Importa categoria con le sue sottocategorie"
 
+    def action_import_icecat_category_withparents(self, request, obj):
+        if import_icecat_category_withparents(obj):
+            messages.add_message(request, messages.SUCCESS,
+                                 "Categoria con le sue categorie superiori importata")
+    action_import_icecat_category_withparents.label = "Importa categoria con le sue categorie superiori"
 
-class IcecatManufacturerHasLogoFilter(SimpleListFilter):
-    title = 'Marche con logo'
-    parameter_name = 'hasLogoUrl'
-
-    def lookups(self, request, model_admin):
-        return [
-            ("yes", "Si"),
-            ("no", "No"),
-        ]
-
-    def queryset(self, request, queryset):
-        if self.value() == 'yes':
-            return queryset.exclude(logo_url__iexact="")
-        if self.value():
-            return queryset.filter(logo_url__iexact="")
+    change_actions = ("action_import_category",
+                      "action_import_icecat_category_withchildren", "action_import_icecat_category_withparents")
+    changelist_actions = ("action_download_icecat_categories",)
 
 
 @admin.register(IcecatManufacturer)

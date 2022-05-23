@@ -6,6 +6,7 @@ import requests
 from icecat.models import IcecatCategory, IcecatManufacturer
 from shop.settings import BASE_DIR, env
 import xml.etree.ElementTree as ET
+from mptt.models import MPTTModel
 
 categories_path_gz = f"{BASE_DIR}/external_data/CategoriesList.xml.gz"
 categories_xml_path = f"{BASE_DIR}/external_data/CategoriesList.xml"
@@ -130,3 +131,45 @@ def import_icecat_category_selected(modeladmin, request, queryset):
         except:
             pass
     messages.success(request, "Categorie importate con successo")
+
+
+# import category with all descendants
+def import_icecat_category_withchildren(category: MPTTModel):
+    for child in category.get_descendants(include_self=True):
+        try:
+            child.create_shop_category()
+        except:
+            pass
+    # connect the icecat categories created
+    connect_icecat_categories()
+    return True
+
+
+@admin.action(description='Importa ogni categoria selezionata con le sue sottocategorie')
+def import_icecat_category_selected_withchildren(modeladmin, request, queryset):
+    for item in queryset:
+        import_icecat_category_selected_withchildren(item)
+    messages.success(
+        request, "Categorie con sottocategorie importate con successo")
+
+
+def import_icecat_category_withparents(category: MPTTModel):
+    tree = []
+    while category.parent is not None:
+        tree.append(category)
+        category = category.parent
+    tree.reverse()
+    for child in tree:
+        try:
+            child.create_shop_category()
+        except:
+            pass
+    return True
+
+
+@admin.action(description='Importa ogni categoria selezionata con le sue categorie superiori')
+def import_icecat_category_selected_withparents(modeladmin, request, queryset):
+    for item in queryset:
+        import_icecat_category_withparents(item)
+    messages.success(
+        request, "Categorie con categorie superiori importate con successo")

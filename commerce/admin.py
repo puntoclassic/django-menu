@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from commerce.actions import categories_update_slug, manufacturers_download_logo
 from django_object_actions import DjangoObjectActions
 from commerce.forms import CustomSignInForm, CustomUserChangeForm
@@ -20,11 +20,15 @@ class AdminCategory(MPTTModelAdmin):
 class AdminManufacturer(DjangoObjectActions, admin.ModelAdmin):
     actions = (manufacturers_download_logo,)
 
+    # download the logo from url
     def download_logo(self, request, obj):
-        if obj.imageUrl is not None and obj.imageUrl != "":
-            obj.download_logo()
+        if obj.download_logo():
+            messages.success(
+                request, "Immagine logo scaricata con successo")
         else:
-            self.message_user()
+            messages.warning(
+                request, "Non è stato possibile scaricare l'immagine, url potrebbe essere vuoto oppure errato")
+
     download_logo.label = "Scarica logo"
 
     change_actions = ('download_logo', )
