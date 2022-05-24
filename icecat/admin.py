@@ -1,15 +1,14 @@
 from django.contrib import admin
 
 from icecat.actions import connect_icecat_categories, download_icecat_categories_file, import_icecat_category_selected, import_icecat_category_selected_withchildren, import_icecat_category_selected_withparents, import_icecat_category_withchildren, import_icecat_category_withparents, import_icecat_manufacturers, import_icecat_manufacturers_selected, parse_icecat_categories_file, unzip_icecat_categories_file, create_root_icecat_category
-from icecat.filters import IcecatManufacturerHasLogoFilter
-from .models import IcecatCategory, IcecatCategoryAlreadyMatchedException, IcecatCategoryExistsOnShopException, IcecatManufacturer, IcecatManufacturerAlreadyMatchedException, IcecatManufacturerExistsOnShopException
+from icecat.filters import ManufacturerHasLogoFilter
+from .models import Category, CategoryAlreadyMatchedException, CategoryExistsOnShopException, Manufacturer, ManufacturerAlreadyMatchedException, ManufacturerExistsOnShopException
 from django.contrib import messages
 from django_object_actions import DjangoObjectActions
 from django.utils.html import format_html
-from mptt.admin import MPTTModelAdmin
 
 
-@admin.register(IcecatCategory)
+@admin.register(Category)
 class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
     list_display = ('name', 'icecat_id', 'parent',)
     search_fields = ('name', 'icecat_id',)
@@ -22,10 +21,10 @@ class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
             obj.create_shop_category()
             messages.add_message(request, messages.SUCCESS,
                                  f"Categoria creata e abbinata")
-        except IcecatCategoryAlreadyMatchedException:
+        except CategoryAlreadyMatchedException:
             messages.add_message(
                 request, messages.WARNING, f"Stai provando a creare una categoria che risulta già abbinata")
-        except IcecatCategoryExistsOnShopException:
+        except CategoryExistsOnShopException:
             messages.add_message(
                 request, messages.WARNING, f"Esiste già una categoria con questo nome {obj.name}")
     action_import_category.label = "Importa categoria"
@@ -58,10 +57,10 @@ class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
     changelist_actions = ("action_download_icecat_categories",)
 
 
-@admin.register(IcecatManufacturer)
+@admin.register(Manufacturer)
 class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
     list_display = ('name', 'icecat_id', 'preview_logo',)
-    list_filter = (IcecatManufacturerHasLogoFilter,)
+    list_filter = (ManufacturerHasLogoFilter,)
     search_fields = ('name', 'icecat_id',)
     actions = (import_icecat_manufacturers_selected,)
 
@@ -89,10 +88,10 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
             obj.create_shop_manufacturer()
             messages.add_message(request, messages.SUCCESS,
                                  f"Marca creata e abbinata")
-        except IcecatManufacturerAlreadyMatchedException:
+        except ManufacturerAlreadyMatchedException:
             messages.add_message(
                 request, messages.WARNING, f"Stai provando a creare una marca che risulta già abbinata")
-        except IcecatManufacturerExistsOnShopException:
+        except ManufacturerExistsOnShopException:
             messages.add_message(
                 request, messages.WARNING, f"Esiste già una marca con questo nome {obj.name}")
 

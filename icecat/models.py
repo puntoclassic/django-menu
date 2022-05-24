@@ -1,34 +1,36 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
-from commerce.models import Category, Manufacturer
+from commerce.models import Category as ShopCategory
+from commerce.models import Manufacturer as ShopManufacturer
+
 
 # Create your models here.
 
 
-class IcecatCategoryExistsOnShopException(Exception):
+class CategoryExistsOnShopException(Exception):
     pass
 
 
-class IcecatCategoryAlreadyMatchedException(Exception):
+class CategoryAlreadyMatchedException(Exception):
     pass
 
 
-class IcecatCategory(MPTTModel):
+class Category(MPTTModel):
     name = models.CharField(max_length=255, blank=False, null=False)
     icecat_id = models.IntegerField(blank=False, null=False)
     parent_icecat_id = models.IntegerField(blank=True, null=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children', verbose_name='Categoria padre')
     shop_category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, blank=True, null=True, related_name='categorie_icecat')
+        ShopCategory, on_delete=models.SET_NULL, blank=True, null=True, related_name='categorie_icecat')
 
     def create_shop_category(self):
-        if Category.objects.filter(name__iexact=self.name).exists():
-            raise IcecatCategoryExistsOnShopException()
+        if ShopCategory.objects.filter(name__iexact=self.name).exists():
+            raise CategoryExistsOnShopException()
         elif self.shop_category is not None:
-            raise IcecatCategoryAlreadyMatchedException()
+            raise CategoryAlreadyMatchedException()
         else:
-            cat = Category()
+            cat = ShopCategory()
             cat.name = self.name
 
             if self.parent:
@@ -45,36 +47,36 @@ class IcecatCategory(MPTTModel):
         return f"{self.name} ({self.icecat_id})"
 
     class Meta:
-        verbose_name_plural = "categorie Icecat"
-        verbose_name = "categoria Icecat"
+        verbose_name_plural = "categorie"
+        verbose_name = "categoria"
 
 
-class IcecatManufacturerExistsOnShopException(Exception):
+class ManufacturerExistsOnShopException(Exception):
     pass
 
 
-class IcecatManufacturerAlreadyMatchedException(Exception):
+class ManufacturerAlreadyMatchedException(Exception):
     pass
 
 
-class IcecatManufacturer(models.Model):
+class Manufacturer(models.Model):
     name = models.CharField(max_length=255, blank=False,
                             null=False, verbose_name='Nome')
     icecat_id = models.IntegerField(blank=False, null=False)
     logo_url = models.URLField(blank=True, null=True)
-    shop_manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, blank=True,
+    shop_manufacturer = models.ForeignKey(ShopManufacturer, on_delete=models.SET_NULL, blank=True,
                                           null=True, related_name='marche_icecat', verbose_name='Corrispondenza marca Negozio')
 
     def __str__(self) -> str:
         return f"{self.name} ({self.icecat_id})"
 
     def create_shop_manufacturer(self):
-        if Manufacturer.objects.filter(name__iexact=self.name).exists():
-            raise IcecatManufacturerExistsOnShopException()
+        if ShopManufacturer.objects.filter(name__iexact=self.name).exists():
+            raise ManufacturerExistsOnShopException()
         elif self.shop_manufacturer is not None:
-            raise IcecatManufacturerAlreadyMatchedException()
+            raise ManufacturerAlreadyMatchedException()
         else:
-            man = Manufacturer()
+            man = ShopManufacturer()
             man.name = self.name
             man.imageUrl = self.logo_url
             man.save()
@@ -84,5 +86,5 @@ class IcecatManufacturer(models.Model):
             return True
 
     class Meta:
-        verbose_name_plural = "marche Icecat"
-        verbose_name = "marca Icecat"
+        verbose_name_plural = "marche"
+        verbose_name = "marca"

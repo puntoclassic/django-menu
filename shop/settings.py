@@ -36,7 +36,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "0.0.0.0",
-    "127.0.0.1"
+    "127.0.0.1",
+    "localhost"
 ]
 
 AUTH_USER_MODEL = 'commerce.CommerceUser'
@@ -54,13 +55,10 @@ INSTALLED_APPS = [
     'commerce',
     'icecat',
     'impostazioni',
-    'solo',
-    "crispy_forms",
-    "crispy_bootstrap5",
+    'solo'
+
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

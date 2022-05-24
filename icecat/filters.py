@@ -1,7 +1,7 @@
 from django.contrib.admin import SimpleListFilter
 
 
-class IcecatManufacturerHasLogoFilter(SimpleListFilter):
+class ManufacturerHasLogoFilter(SimpleListFilter):
     title = 'Marche con logo'
     parameter_name = 'hasLogoUrl'
 

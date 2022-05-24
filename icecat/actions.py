@@ -3,7 +3,7 @@ from django.contrib import admin, messages
 import gzip
 import os
 import requests
-from icecat.models import IcecatCategory, IcecatManufacturer
+from icecat.models import Category, Manufacturer
 from shop.settings import BASE_DIR, env
 import xml.etree.ElementTree as ET
 from mptt.models import MPTTModel
@@ -39,8 +39,8 @@ def parse_icecat_categories_file():
 
     for category in root.findall('./Response/CategoriesList/Category'):
 
-        if IcecatCategory.objects.filter(icecat_id=category.attrib["ID"]).exists():
-            new_cat = IcecatCategory()
+        if Category.objects.filter(icecat_id=category.attrib["ID"]).exists():
+            new_cat = Category()
             names = category.findall("Name")
 
             for name in names:
@@ -63,9 +63,9 @@ def parse_icecat_categories_file():
 
 
 def connect_icecat_categories():
-    for category in IcecatCategory.objects.exclude(parent_icecat_id=None):
+    for category in Category.objects.exclude(parent_icecat_id=None):
         try:
-            category.parent = IcecatCategory.objects.get(
+            category.parent = Category.objects.get(
                 icecat_id=category.parent_icecat_id)
             category.save()
         except:
@@ -75,8 +75,8 @@ def connect_icecat_categories():
 
 def create_root_icecat_category():
 
-    if IcecatCategory.objects.filter(icecat_id=1).exists():
-        cat = IcecatCategory()
+    if Category.objects.filter(icecat_id=1).exists():
+        cat = Category()
         cat.name = "Root"
         cat.icecat_id = 1
         cat.save()
@@ -102,8 +102,8 @@ def import_icecat_manufacturers():
         root = tree.getroot()
 
         for supplier in root.iter('Supplier'):
-            if IcecatManufacturer.objects.filter(icecat_id=supplier.attrib["ID"]).exists():
-                new_man = IcecatManufacturer()
+            if Manufacturer.objects.filter(icecat_id=supplier.attrib["ID"]).exists():
+                new_man = Manufacturer()
                 new_man.icecat_id = supplier.attrib["ID"]
                 new_man.name = supplier.attrib["Name"]
                 new_man.logo_url = supplier.attrib["LogoMediumPic"]

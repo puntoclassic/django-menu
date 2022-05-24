@@ -1,0 +1,9 @@
+django
+gunicorn
+Pillow
+django-object-actions
+django-mptt
+requests
+djlint
+django-environ
+django-solo

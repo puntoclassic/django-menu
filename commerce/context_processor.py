@@ -1,6 +1,6 @@
 import imp
 from .models import Category
-import feedparser
+
 
 
 def base_categories(request):
