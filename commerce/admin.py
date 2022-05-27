@@ -3,7 +3,7 @@ from commerce.actions import categories_update_slug, manufacturers_download_logo
 from django_object_actions import DjangoObjectActions
 from commerce.forms import CustomSignInForm, CustomUserChangeForm
 
-from commerce.models import Category, CommerceUser, Manufacturer
+from commerce.models import Category, CommerceUser, Manufacturer, Product
 from mptt.admin import MPTTModelAdmin
 from django.contrib.auth.admin import UserAdmin
 
@@ -33,6 +33,9 @@ class AdminManufacturer(DjangoObjectActions, admin.ModelAdmin):
 
     change_actions = ('download_logo', )
 
+@admin.register(Product)
+class AdminProduct(admin.ModelAdmin):
+    pass
 
 @admin.register(CommerceUser)
 class CustomUserAdmin(UserAdmin):

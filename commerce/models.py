@@ -69,6 +69,9 @@ class Manufacturer(models.Model):
     def __str__(self):
         return self.name
 
+class Product(models.Model):
+    name = models.CharField(max_length=255,blank=False,null=False)
+
 
 class CommerceUser(AbstractUser):
     tipologia = models.CharField(choices=[
@@ -77,3 +80,4 @@ class CommerceUser(AbstractUser):
         ('PUBBLICA_AMMINISTRAZIONE', 'Pubblica Amministrazione'),
         ('ASSOCIAZIONE', 'Associazione')
     ], blank=False, null=False, default='Privato', max_length=200)
+
