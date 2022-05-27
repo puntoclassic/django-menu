@@ -5,12 +5,17 @@
 
 .main-topbar-admin {
   height: 60px;
-  background-color: var(--bs-primary);
+  background-color: var(--bs-dark);
 }
 
 .main-desktopmenu {
   height: 40px;
   background-color: var(--bs-secondary);
+}
+
+.main-desktopmenu-admin {
+  height: 40px;
+  background-color: var(--bs-black);
 }
 
 .text-logo {

@@ -3,87 +3,105 @@
 
 {% block content %}
 <div class="p-4">
-    <div class="row">
-        <div class="col-12">
-            <p>Bentornato {{user.first_name}} {{user.last_name}}</p>
-        </div>
+  <div class="row">
+    <div class="col-12">
+      <p>Bentornato {{user.first_name}} {{user.last_name}}</p>
     </div>
-    <div class="row">
-        <div class="col-lg-3 pt-1 pe-1 ps-1">
-            <a href="{% url 'le-mie-informazioni-view' %}">
-              <div class="card">
-                <div class="card-body">
-                  <div class="row ">
-                      <div class="col-3 d-flex justify-content-end align-items-center">
-                        <i class="bi bi-person-badge"></i>
-                      </div>
-                      <div class="col-9 d-flex justify-content-start align-items-center">
-                        Le mie informazioni
-                      </div>
-                  </div>
-                </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3 pt-1 pe-1 ps-1">
+      <a href="{% url 'le-mie-informazioni-view' %}">
+        <div class="card">
+          <div class="card-body">
+            <div class="row ">
+              <div class="col-3 d-flex justify-content-end align-items-center">
+                <i class="bi bi-person-badge"></i>
               </div>
-            </a>
-        </div>
-        <div class="col-lg-3 pt-1 pe-1 ps-1">
-          <div class="card">
-              <div class="card-body">
-                <div class="row ">
-                    <div class="col-3 d-flex justify-content-end align-items-center">
-                      <i class="bi bi-bag"></i>
-                    </div>
-                    <div class="col-9 d-flex justify-content-start align-items-center">
-                      I miei ordini
-                    </div>
-                </div>
+              <div class="col-9 d-flex justify-content-start align-items-center">
+                Le mie informazioni
               </div>
             </div>
+          </div>
         </div>
-        <div class="col-lg-3 pt-1 pe-1 ps-1">
-          <div class="card">
-              <div class="card-body">
-                <div class="row ">
-                    <div class="col-3 d-flex justify-content-end align-items-center">
-                      <i class="bi bi-chat-dots"></i>
-                    </div>
-                    <div class="col-9 d-flex justify-content-start align-items-center">
-                      Le mie richieste
-                    </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        <div class="col-lg-3 pt-1 pe-1 ps-1">
-          <div class="card">
-              <div class="card-body">
-                <div class="row ">
-                    <div class="col-3 d-flex justify-content-end align-items-center">
-                      <i class="bi bi-truck"></i>
-                    </div>
-                    <div class="col-9 d-flex justify-content-start align-items-center">
-                      I miei indirizzi
-                    </div>
-                </div>
-              </div>
-            </div>
-        </div>
-        <div class="col-lg-3 pt-1 pe-1 ps-1">
-          <div class="card">
-              <div class="card-body">
-                <div class="row ">
-                    <div class="col-3 d-flex justify-content-end align-items-center">
-                      <i class="bi bi-file-earmark-pdf"></i>
-                    </div>
-                    <div class="col-9 d-flex justify-content-start align-items-center">
-                      Le mie richieste di reso
-                    </div>
-                </div>
-              </div>
-            </div>
-        </div>
+      </a>
     </div>
-    <!--
+    <div class="col-lg-3 pt-1 pe-1 ps-1">
+      <div class="card">
+        <div class="card-body">
+          <div class="row ">
+            <div class="col-3 d-flex justify-content-end align-items-center">
+              <i class="bi bi-bag"></i>
+            </div>
+            <div class="col-9 d-flex justify-content-start align-items-center">
+              I miei ordini
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 pt-1 pe-1 ps-1">
+      <div class="card">
+        <div class="card-body">
+          <div class="row ">
+            <div class="col-3 d-flex justify-content-end align-items-center">
+              <i class="bi bi-chat-dots"></i>
+            </div>
+            <div class="col-9 d-flex justify-content-start align-items-center">
+              Le mie richieste
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 pt-1 pe-1 ps-1">
+      <div class="card">
+        <div class="card-body">
+          <div class="row ">
+            <div class="col-3 d-flex justify-content-end align-items-center">
+              <i class="bi bi-truck"></i>
+            </div>
+            <div class="col-9 d-flex justify-content-start align-items-center">
+              I miei indirizzi
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 pt-1 pe-1 ps-1">
+      <div class="card">
+        <div class="card-body">
+          <div class="row ">
+            <div class="col-3 d-flex justify-content-end align-items-center">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </div>
+            <div class="col-9 d-flex justify-content-start align-items-center">
+              Le mie richieste di reso
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if user.is_staff %}
+    <div class="col-lg-3 pt-1 pe-1 ps-1">
+      <a href="{% url 'amministrazione' %}">
+        <div class="card">
+          <div class="card-body">
+            <div class="row ">
+              <div class="col-3 d-flex justify-content-end align-items-center">
+                <i class="bi bi-speedometer"></i>
+              </div>
+              <div class="col-9 d-flex justify-content-start align-items-center">
+                Amministrazione negozio
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+  <!--
     -->
-    
+
 </div>
 {% endblock %}
