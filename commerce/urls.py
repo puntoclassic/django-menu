@@ -1,5 +1,5 @@
 from pipes import Template
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from commerce.views import *
 
 urlpatterns = [   
@@ -19,6 +19,8 @@ urlpatterns = [
     path('account/le-mie-informazioni/',AccountInformazioniProfiloView.as_view(),name='le-mie-informazioni-view'),
     path('account/le-mie-informazioni/edit/<int:pk>',AccountInformazioniProfiloEdit.as_view(),name='le-mie-informazioni-edit'),
     path('account/cambia-password',AccountCambiaPassword.as_view(),name='cambia-password'),
-    path('account/cambia-password/completato',AccountCambiaPasswordDone.as_view(),name='cambia-password-done')
+    path('account/cambia-password/completato',AccountCambiaPasswordDone.as_view(),name='cambia-password-done'),
+    path('admin/',include('commerce.admin_urls'))
+
 
 ]

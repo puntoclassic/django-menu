@@ -71,6 +71,12 @@ class Manufacturer(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255,blank=False,null=False)
+    default_category = models.ForeignKey(Category, verbose_name="Categoria di default", on_delete=models.SET_NULL,blank=True,null=True,name='default_category')
+    categories = models.ManyToManyField(Category,verbose_name='Categorie',blank=True,related_name='products')
+    active = models.BooleanField(verbose_name='Attivo (Si/No)',blank=True,default=True,null=False)
+    descrizione_breve = models.TextField(verbose_name='Descrizione breve (400 caratteri)',max_length=400,blank=True,null=True)
+    descrizione = models.TextField(verbose_name='Descrizione', blank=True,null=True)
+
 
 
 class CommerceUser(AbstractUser):

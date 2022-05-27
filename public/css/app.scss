@@ -1,39 +1,71 @@
 .main-topbar {
-    height: 100px;
-    background-color: var(--bs-primary);
-  }
+  height: 100px;
+  background-color: var(--bs-primary);
+}
 
-  .main-desktopmenu {
-    height: 40px;
-    background-color: var(--bs-secondary);
-  }
+.main-topbar-admin {
+  height: 60px;
+  background-color: var(--bs-primary);
+}
 
-  .text-logo {
-    color:white;
+.main-desktopmenu {
+  height: 40px;
+  background-color: var(--bs-secondary);
+}
+
+.text-logo {
+  color: white;
+  text-decoration: none;
+  font-size: 24pt;
+
+  a {
+    color: white !important;
     text-decoration: none;
     font-size: 24pt;
 
-    a {
-        color:white!important;
-        text-decoration: none;
-        font-size: 24pt;
-        &:hover{
-            color: white!important;
-            text-decoration: none;
-            font-size: 24pt;
-        }
+    &:hover {
+      color: white !important;
+      text-decoration: none;
+      font-size: 24pt;
     }
+  }
+
+  &:hover {
+    color: white !important;
+    text-decoration: none;
+    font-size: 24pt;
+  }
+}
+
+.text-logo-admin {
+  color: white;
+  text-decoration: none;
+  font-size: 12pt;
+
+  a {
+    color: white !important;
 
     &:hover {
-        color: white!important;
-        text-decoration: none;
-        font-size: 24pt;
+      color: white !important;
     }
   }
 
-  .hamburger-menu{
-    width:400px;
-    background-color:var(--bs-secondary);
-    color:white;
-    z-index: 1;
+  &:hover {
+    color: white !important;
   }
+}
+
+.hamburger-menu {
+  width: 400px;
+  background-color: var(--bs-secondary);
+  color: white;
+  z-index: 1;
+}
+
+.content-container {
+  background-color: white;
+}
+
+.admin-container {
+  width: 97%;
+}
