@@ -9,7 +9,7 @@ from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 
-
+'''
 @admin.register(Category)
 class AdminCategory(MPTTModelAdmin):
     list_display = ('name', 'slug',)
@@ -49,3 +49,4 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Informazioni cliente', {'fields': ('tipologia',)}),
     )
+'''

@@ -7,7 +7,7 @@ from django.contrib import messages
 from django_object_actions import DjangoObjectActions
 from django.utils.html import format_html
 
-
+'''
 @admin.register(Category)
 class AdminIcecatCategory(DjangoObjectActions, admin.ModelAdmin):
     list_display = ('name', 'icecat_id', 'parent',)
@@ -100,3 +100,4 @@ class AdminIcecatManufacturer(DjangoObjectActions, admin.ModelAdmin):
     change_actions = ("import_manufacturer",)
 
     changelist_actions = ("download_icecat_manufacturers",)
+'''
