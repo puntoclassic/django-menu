@@ -27,8 +27,29 @@
         <div class="container-fluid flex-grow-1 g-0 p-2">
             <div class="row h-100 g-0">
                 <div class="col-lg-2 h-100 p-2">
-                    <div class="shadow h-100 p-4 content-container">
-                        <b>AMMINISTRAZIONE</b>
+                    <div class="shadow h-100 content-container">
+                        <a class="list-group-item p-2 list-group-item-action bg-success text-center bg-gradient text-light"
+                            data-bs-toggle="collapse">AMMINISTRAZIONE</a>
+                        <div class="list-group list-group-flush">
+                            <a class="list-group-item list-group-item-action bg-dark bg-gradient text-light"
+                                data-bs-toggle="collapse" href="#adminCatalogo">Catalogo</a>
+                            <div class="collapse" id="adminCatalogo">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item bg-light bg-gradient ps-4"><a href="">Prodotti</a></li>
+                                    <li class="list-group-item bg-light bg-gradient ps-4"><a
+                                            href="{% url 'admin_category_listview' %}">Categorie</a></li>
+                                    <li class="list-group-item bg-light bg-gradient ps-4"><a href="">Marche</a></li>
+                                </ul>
+                            </div>
+                            <a class="list-group-item list-group-item-action bg-dark bg-gradient text-light"
+                                data-bs-toggle="collapse" href="#adminImpostazioni">Impostazioni</a>
+                            <div class="collapse" id="adminImpostazioni">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item bg-light bg-gradient ps-4"><a data-bs-toggle="collapse"
+                                            href="">Generali</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-10 h-100 p-2">

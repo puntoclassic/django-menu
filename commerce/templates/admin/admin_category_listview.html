@@ -1,0 +1,42 @@
+{% extends "layouts/admin_base.html" %}
+{% block page_title %}
+Categorie
+{% endblock page_title %}
+{% block content %}
+<div class="p-4">
+
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col" class="text-center">Attiva (Si/No)</th>
+                <th scope="col" class="text-center">Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in object_list  %}
+            <tr>
+                <th scope="row">{{category.id}}</th>
+                <td>{{category.name}}</td>
+                <td class="text-center">
+                    {% if category.active %}
+                    <i class="bi bi-arrow-up-circle-fill text-success"></i>
+                    {% else %}
+                    <i class="bi bi-arrow-down-circle-fill text-danger"></i>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-light" href="{% url 'admin_category_listview'%}?by_parent={{category.id}}">
+                        <i class="bi bi-list-nested"></i>
+                    </a>
+                    <a class="btn btn-light" href="{% url 'admin_category_updateview' pk=category.id%} ">
+                        <i class=" bi bi-pencil-square"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
