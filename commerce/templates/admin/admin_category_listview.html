@@ -5,38 +5,68 @@ Categorie
 {% block content %}
 <div class="p-4">
 
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nome</th>
-                <th scope="col" class="text-center">Attiva (Si/No)</th>
-                <th scope="col" class="text-center">Azioni</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for category in object_list  %}
-            <tr>
-                <th scope="row">{{category.id}}</th>
-                <td>{{category.name}}</td>
-                <td class="text-center">
-                    {% if category.active %}
-                    <i class="bi bi-arrow-up-circle-fill text-success"></i>
-                    {% else %}
-                    <i class="bi bi-arrow-down-circle-fill text-danger"></i>
-                    {% endif %}
-                </td>
-                <td class="text-center">
-                    <a class="btn btn-light" href="{% url 'admin_category_listview'%}?by_parent={{category.id}}">
-                        <i class="bi bi-list-nested"></i>
-                    </a>
-                    <a class="btn btn-light" href="{% url 'admin_category_updateview' pk=category.id%} ">
-                        <i class=" bi bi-pencil-square"></i>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="row g-0">
+
+        <div class="col-lg-12  d-flex justify-content-end">
+            <form method="get">
+                <div class="row">
+                    <div class="col-auto">
+                        <label for="staticEmail2" class="visually-hidden">Cerca</label>
+                        <input type="text" class="form-control" name="search_key" id="search_key" value="">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Cerca</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if object_list.first.parent %}
+    <div class="row g-0 mb-3">
+        <div class="col-lg-1">
+            <a class="btn btn-info"
+                href="{% url 'admin_category_listview'%}?by_parent={{object_list.first.parent.parent.id}}"><i
+                    class="bi bi-arrow-90deg-left"></i>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row g-0">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col" class="text-center">Attiva (Si/No)</th>
+                    <th scope="col" class="text-center">Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in object_list  %}
+                <tr>
+                    <th scope="row">{{category.id}}</th>
+                    <td>{{category.name}}</td>
+                    <td class="text-center">
+                        {% if category.active %}
+                        <i class="bi bi-arrow-up-circle-fill text-success"></i>
+                        {% else %}
+                        <i class="bi bi-arrow-down-circle-fill text-danger"></i>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-light" href="{% url 'admin_category_listview'%}?by_parent={{category.id}}">
+                            <i class="bi bi-list-nested"></i>
+                        </a>
+                        <a class="btn btn-light" href="{% url 'admin_category_updateview' pk=category.id%} ">
+                            <i class=" bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content %}
