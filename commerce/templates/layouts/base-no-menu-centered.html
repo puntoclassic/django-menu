@@ -10,11 +10,12 @@
     <div class="App">
         <div class="container w-75 p-4 h-100 ">
             <div class="shadow bg-white h-100 rounded-1">
-                    <div class="col-lg-12 h-100 d-flex flex-column">
-                        <div class="row g-0">
+                <div>
+                    <div class="col-lg-12 h-100 d-flex align-items-center justify-content-center flex-column">
+                        <div class="g-0">
                             {% include 'widgets/header.html' %}
                         </div>
-                        <div class="row my-3 flex-grow-1">
+                        <div class="my-3">
                             <div class="col-lg-12">
                                     <div class="col-lg-12">
                                         {% block content %}
@@ -23,6 +24,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>

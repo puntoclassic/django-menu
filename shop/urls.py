@@ -6,5 +6,6 @@ from commerce.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('commerce.urls'))
+    path('',include('commerce.urls')),
+    path('profilo/',include('profilo.urls'))
 ]

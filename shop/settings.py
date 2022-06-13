@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [
     "localhost"
 ]
 
-AUTH_USER_MODEL = 'commerce.CommerceUser'
+AUTH_USER_MODEL = 'profilo.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_object_actions',
     'commerce',
     'impostazioni',
+    'profilo',
     'solo'
 
 ]
@@ -149,7 +150,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = 'account'
+LOGIN_REDIRECT_URL = 'profilo'
 AUTHENTICATION_BACKENDS = ['shop.utils.EmailBackend']
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env('EMAIL_HOST')
@@ -157,4 +158,4 @@ EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
-LOGIN_URL = "/account/login"
+LOGIN_URL = "/profilo/login"

@@ -1,17 +1,11 @@
 
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import TemplateView, DetailView, UpdateView
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView, PasswordResetDoneView, PasswordChangeDoneView
-from django.urls import reverse_lazy, reverse
-from django.views import generic
-from django.contrib import messages
+from django.views.generic import TemplateView, DetailView
 
-from commerce.forms import AccountInformazioniEditForm, ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import FormView
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Category, CommerceUser
+from .models import Category
 
 # Create your views here.
 class HomeView(TemplateView):
@@ -22,8 +16,13 @@ class HomeView(TemplateView):
         first_category = Category.objects.first()
 
         if first_category is not None:
-            return redirect('category-show',pk=first_category.slug)        
+            return redirect('category-show',slug=first_category.slug)  
+        else:
+            return redirect('error-page')    
         return super().get(request, *args, **kwargs) 
+
+class ErrorPageView(TemplateView):
+    template_name = "error.html"  
 
 
 
@@ -32,12 +31,11 @@ class CategoriaListView(DetailView):
     model = Category
    
 
-    '''def get_object(self):
-        category = get_object_or_404(Category, slug=self.kwargs['permalink'])
-        self.anchestors_categories = category.get_ancestors(include_self=True)
-        return self.model.objects.filter(slug=self.kwargs['permalink']).first()
+    def get_object(self):
+        category = get_object_or_404(Category, slug=self.kwargs['slug'])
+        return self.model.objects.filter(slug=self.kwargs['slug']).first()
 
-    def get(self, request, *args, **kwargs):      
+    '''def get(self, request, *args, **kwargs):      
         category = get_object_or_404(Category, slug=self.kwargs['permalink'])
         if category:
             self.children_categories = Category.objects.filter(slug=kwargs["permalink"]).first().get_children()
@@ -50,79 +48,3 @@ class CategoriaListView(DetailView):
         return context_data'''
 
 #profile views
-
-class CustomLoginView(LoginView):
-    template_name = "login.html"
-    form_class = CustomLoginForm
-    redirect_url = reverse_lazy('account')
-
-class CustomSignInView(generic.CreateView):
-    template_name = "signin.html"
-    form_class = CustomSignInForm
-    success_url = reverse_lazy('login')
-
-class CustomLogoutView(LogoutView):
-    template_name = "logout.html"
-
-class CustomPasswordResetView(PasswordResetView):
-    form_class = CustomPasswordRecoveryForm
-    subject_template_name = "emails/recupera-password-subject.html"
-    email_template_name = "emails/recupera-password-body.html"
-    template_name = "account/recupera-password/recupera-password-1.html"
-
-class CustomPasswordResetDone(PasswordResetDoneView):
-    template_name = "account/recupera-password/recupera-password-2.html"
-
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = "account/recupera-password/recupera-password-3.html"
-
-class CustomPasswordResetCompleted(PasswordChangeDoneView):
-    template_name = "account/recupera-password/recupera-password-4.html"
-
-class AccountView(LoginRequiredMixin,TemplateView):
-    template_name = "account/index.html"
-    redirect_field_name = 'redirect_to'
-
-
-    
-class AccountInviaMessaggio(LoginRequiredMixin,FormView):
-    template_name = 'account/form-contatto/form-contatto-1.html'
-    form_class = ContactForm
-    success_url = reverse_lazy('invia-messaggio-ok')
-
-    def get(self, request, *args, **kwargs):
-        self.initial["first_name"] = request.user.first_name
-        self.initial["last_name"] = request.user.last_name
-        self.initial["email"] = request.user.email
-
-        return super().get(request, *args, **kwargs)
-
-    def form_valid(self, form):      
-        return super().form_valid(form)
-
-class AccountInviaMessaggioDone(LoginRequiredMixin,TemplateView):
-    template_name = 'account/form-contatto/form-contatto-2.html'
-
-class AccountInformazioniProfiloView(TemplateView):
-    template_name = "account/informazioni-profilo/view.html"
-
-class AccountInformazioniProfiloEdit(UpdateView):
-    model = CommerceUser
-    form_class = AccountInformazioniEditForm
-    template_name = "account/informazioni-profilo/edit.html"
-
-    def form_valid(self, form):
-        messages.success(self.request,message="Informazioni aggiornate con successo!")
-        return super().form_valid(form)
-
-    def get_success_url(self) -> str:
-        return reverse('le-mie-informazioni-edit',kwargs={'pk':self.object.id})
-
-
-
-class AccountCambiaPassword(PasswordChangeView):
-    template_name = "account/cambia-password/cambia-password-1.html"
-    success_url = reverse_lazy("cambia-password-done")
-
-class AccountCambiaPasswordDone(TemplateView):
-    template_name = "account/cambia-password/cambia-password-2.html"

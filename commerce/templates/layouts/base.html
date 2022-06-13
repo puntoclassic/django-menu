@@ -19,7 +19,13 @@
                         </div>
                         <div class="g-0">
                             <div class="col-lg-12 d-flex justify-content-center align-items-end flex-column p-4">
-                                <button class="btn btn-danger"><i class="bi bi-bag pe-2"></i>Carrello</button>
+                                <div class="row">
+                                    <div class="btn-group">
+                                        <a class="btn btn-info" href='{% url "profilo" %}'><i class="bi bi-person-fill"></i></a>
+                                        <a class="btn btn-light" href='{% url "logout" %}'><i class="bi bi-box-arrow-right"></i></a>
+                                        <button class="btn btn-danger"><i class="bi bi-bag"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr class="ms-4 me-4 m-0">
