@@ -1,40 +1,22 @@
 from django.contrib import admin, messages
-from commerce.actions import categories_update_slug, manufacturers_download_logo
+from commerce.actions import categories_update_slug
 from django_object_actions import DjangoObjectActions
 from commerce.forms import CustomSignInForm, CustomUserChangeForm
 
-from commerce.models import Category, CommerceUser, Manufacturer, Product
-from mptt.admin import MPTTModelAdmin
+from commerce.models import Category, CommerceUser, Food
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 
 
 @admin.register(Category)
-class AdminCategory(MPTTModelAdmin):
+class AdminCategory(admin.ModelAdmin):
     list_display = ('name', 'slug',)
     actions = (categories_update_slug,)
 
 
-@admin.register(Manufacturer)
-class AdminManufacturer(DjangoObjectActions, admin.ModelAdmin):
-    actions = (manufacturers_download_logo,)
-
-    # download the logo from url
-    def download_logo(self, request, obj):
-        if obj.download_logo():
-            messages.success(
-                request, "Immagine logo scaricata con successo")
-        else:
-            messages.warning(
-                request, "Non è stato possibile scaricare l'immagine, url potrebbe essere vuoto oppure errato")
-
-    download_logo.label = "Scarica logo"
-
-    change_actions = ('download_logo', )
-
-@admin.register(Product)
-class AdminProduct(admin.ModelAdmin):
+@admin.register(Food)
+class AdminFood(admin.ModelAdmin):
     pass
 
 @admin.register(CommerceUser)
@@ -45,6 +27,8 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ('first_name', 'last_name',
                     'email', 'tipologia', 'is_staff',)
+
+    list_display_links = ('first_name','last_name','email')
 
     fieldsets = UserAdmin.fieldsets + (
         ('Informazioni cliente', {'fields': ('tipologia',)}),

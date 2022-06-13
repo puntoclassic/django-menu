@@ -2,34 +2,5 @@
 {% block page_title %}Home{% endblock %}
 
 {% block content %}
-<div class="row p-4">
-    <div class="row">
-        <div class="col-12">
-            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a data-bs-toggle="offcanvas" href="#offcanvasCategorie" role="button" aria-controls="offcanvasExample">Categorie</a></li>                      
-                  {% for category in anchestors_categories %}
-                    <li class="breadcrumb-item"><a href="{% url 'categoria' permalink=category.slug %}">{{category.name}}</a></li>
-                  {% endfor %}
-                </ol>
-              </nav>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3">
-            {% if children_categories %}        
-            <ul class="list-group">            
-                <li class="list-group-item"><b>Sottocategorie</b></li>
-                {% for cat in children_categories %}
-                <li class="list-group-item"><a href="{% url 'categoria' permalink=cat.slug %}">{{cat.name}}</a></li>
-                {% endfor %}
-            </ul>         
-            {% endif %}                
-        </div>
-        <div class="col-lg-9">
-            
-        </div>
-    </div>
-    
-</div>
+
 {% endblock %}

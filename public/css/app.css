@@ -1,70 +1,45 @@
-.main-topbar {
-  height: 100px;
-  background-color: var(--bs-primary);
+@import url("https://fonts.googleapis.com/css2?family=Smooch&family=Smooch+Sans:wght@100&display=swap");
+html,
+body {
+  height: 100%;
 }
 
-.main-topbar-admin {
-  height: 60px;
-  background-color: var(--bs-dark);
+.App {
+  height: 100%;
+  background-color: #8C0303;
 }
 
-.main-desktopmenu {
-  height: 40px;
-  background-color: var(--bs-secondary);
+.app-title {
+  font-family: "Smooch", cursive;
 }
 
-.main-desktopmenu-admin {
-  height: 40px;
-  background-color: var(--bs-black);
+.ingredients {
+  font-family: "Smooch Sans", sans-serif;
 }
 
-.text-logo {
-  color: white;
-  text-decoration: none;
-  font-size: 24pt;
-}
-.text-logo a {
-  color: white !important;
-  text-decoration: none;
-  font-size: 24pt;
-}
-.text-logo a:hover {
-  color: white !important;
-  text-decoration: none;
-  font-size: 24pt;
-}
-.text-logo:hover {
-  color: white !important;
-  text-decoration: none;
-  font-size: 24pt;
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: var(--bs-nav-pills-link-active-color);
+  background-color: #8C0303;
 }
 
-.text-logo-admin {
-  color: white;
-  text-decoration: none;
-  font-size: 12pt;
+.nav-item {
+  transition: background-color 500ms;
 }
-.text-logo-admin a {
-  color: white !important;
-}
-.text-logo-admin a:hover {
-  color: white !important;
-}
-.text-logo-admin:hover {
-  color: white !important;
+.nav-item .nav-link {
+  color: black;
 }
 
-.hamburger-menu {
-  width: 400px;
-  background-color: var(--bs-secondary);
-  color: white;
-  z-index: 1;
+.category-page {
+  opacity: 1;
+  transition: opacity 2s;
 }
 
-.content-container {
-  background-color: white;
+.fade-in {
+  opacity: 1;
+  transition: opacity 1s ease;
 }
 
-.admin-container {
-  width: 97%;
+.fade-out {
+  opacity: 0;
 }/*# sourceMappingURL=app.css.map */
