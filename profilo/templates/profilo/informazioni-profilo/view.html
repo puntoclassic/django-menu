@@ -1,5 +1,7 @@
-{% extends 'layouts/base.html' %}
-{% block page_title %}Le mie informazioni{% endblock %}
+{% extends "layouts/base.html" %}
+{% block page_title %}
+    Le mie informazioni
+{% endblock page_title %}
 {% block content %}
     <div class="p-4">
         <div class="row">
@@ -16,7 +18,7 @@
                                readonly
                                class="form-control"
                                id="staticEmail"
-                               value="{{ user.first_name }}">
+                               value="{{ user.first_name }}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
@@ -26,7 +28,7 @@
                                readonly
                                class="form-control"
                                id="staticEmail"
-                               value="{{ user.last_name }}">
+                               value="{{ user.last_name }}"/>
                     </div>
                 </div>
             </div>
@@ -54,4 +56,26 @@
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock content %}
+{% block topbar %}
+    <div class="g-0 row">
+        <div class="col-lg-12">
+            <div class="row g-0 topbar-style">
+                <div class="col-lg-4 d-flex justify-content-start align-items-center p-2"></div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">
+                    {% include "widgets/cart-button.html" %}
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-link text-light" href="{% url 'profilo' %}"><i class="bi bi-globe2 pe-2"></i>Profilo</a>
+                        <a class="btn btn-link text-light" href="{% url 'logout' %}"><i class="bi-box-arrow-right pe-2"></i>Esci</a>
+                    {% else %}
+                        {% include "widgets/login-button.html" %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock topbar %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

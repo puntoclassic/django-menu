@@ -1,6 +1,5 @@
-from django.views.generic import TemplateView, UpdateView
-from allauth.account.views import LoginView, PasswordResetView, PasswordChangeView, PasswordResetDoneView, SignupView
-from django.contrib.auth.views import PasswordResetConfirmView,  PasswordChangeDoneView, LogoutView
+from django.views.generic import TemplateView, UpdateView, CreateView
+from django.contrib.auth.views import LoginView, PasswordResetConfirmView,  PasswordChangeDoneView, LogoutView,  PasswordResetView, PasswordChangeView, PasswordResetDoneView
 
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -9,7 +8,6 @@ from django.contrib import messages
 from .forms import AccountInformazioniEditForm, ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import User
 # Create your views here.
@@ -21,7 +19,7 @@ class CustomLoginView(LoginView):
     redirect_url = reverse_lazy('account')
 
 
-class CustomSignInView(SignupView):
+class CustomSignInView(CreateView):
     template_name = "profilo/signin.html"
     form_class = CustomSignInForm
     success_url = reverse_lazy('login')

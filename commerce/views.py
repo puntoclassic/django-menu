@@ -8,28 +8,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Category
 
 # Create your views here.
+
+
 class HomeView(TemplateView):
-    template_name = "index.html"   
+    template_name = "index.html"
 
-    def get(self, request, *args, **kwargs):
-
-        first_category = Category.objects.first()
-
-        if first_category is not None:
-            return redirect('category-show',slug=first_category.slug)  
-        else:
-            return redirect('error-page')    
-        return super().get(request, *args, **kwargs) 
 
 class ErrorPageView(TemplateView):
-    template_name = "error.html"  
-
+    template_name = "error.html"
 
 
 class CategoriaListView(DetailView):
     template_name = "categoria.html"
     model = Category
-   
 
     def get_object(self):
         category = get_object_or_404(Category, slug=self.kwargs['slug'])
@@ -47,4 +38,4 @@ class CategoriaListView(DetailView):
         context_data["anchestors_categories"] = self.anchestors_categories
         return context_data'''
 
-#profile views
+# profile views

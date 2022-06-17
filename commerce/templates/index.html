@@ -1,9 +1,30 @@
-{% extends "layouts/base-no-menu-centered.html" %}
-{% block page_title %}Caricamento{% endblock page_title %}
-{% block content %}
-<div class="col-lg-12 flex-grow-1">
-    <div class="spinner-grow text-danger" role="status">
-        <span class="visually-hidden">Loading...</span>
+{% extends "layouts/base.html" %}
+{% block page_title %}
+    Home
+{% endblock page_title %}
+{% block topbar %}
+    <div class="g-0 row">
+        <div class="col-lg-12">
+            <div class="row g-0 topbar-style">
+                <div class="col-lg-4 d-flex justify-content-start align-items-center p-2">
+                    {% include "widgets/global-search-form.html" %}
+                </div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">
+                    {% include "widgets/cart-button.html" %}
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-link text-light" href="{% url 'profilo' %}"><i class="bi bi-globe2 pe-2"></i>Profilo</a>
+                        <a class="btn btn-link text-light" href="{% url 'logout' %}"><i class="bi-box-arrow-right pe-2"></i>Esci</a>
+                    {% else %}
+                        {% include "widgets/login-button.html" %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+{% endblock topbar %}
+{% block content %}
 {% endblock content %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

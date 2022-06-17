@@ -4,10 +4,11 @@ body {
   height: 100%;
 }
 
-.App {
-  height: 100%;
-  background-color: #8C0303;
+.topbar-style {
+  background-color: #58151c;
 }
+
+
 
 .app-title {
   font-family: "Smooch", cursive;
