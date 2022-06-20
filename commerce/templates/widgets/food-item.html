@@ -9,7 +9,7 @@
     </div>
     <div class="col-lg-4 d-flex justify-content-end align-items-center">
         {{ item.price }} €
-        <form method="post" class="m-0" action="">
+        <form method="post" class="m-0" action="{% url 'add-to-cart' %}">
             {% csrf_token %}
             <input type="hidden" name="food_id" value="{{ item.id }}" />
             <input type="hidden" name="food_name" value="{{ item.name }}" />
