@@ -1,17 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Smooch&family=Smooch+Sans:wght@100&display=swap');
+@import "../scss/bootstrap.scss";
 
 html,
 body {
     height: 100%;
 }
 
-.topbar-style {
-    background-color: #58151c
-}
 
 .App {
     height: 100%;
-    background-color: #8C0303;
 }
 
 .app-title {
@@ -25,14 +22,24 @@ body {
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
     color: var(--bs-nav-pills-link-active-color);
-    background-color: #8C0303;
+    background-color: var($primary);
 }
+
+
 
 .nav-item {
     transition: background-color 500ms;
 
     .nav-link {
         color: black;
+    }
+
+    .nav-pill-item {
+        background-color: #f1f1f1;
+
+        &:hover {
+            background-color: #a99f9f;
+        }
     }
 }
 
@@ -48,4 +55,17 @@ body {
 
 .fade-out {
     opacity: 0;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(0px, 250px));
+
+    column-gap: 15px;
+    row-gap: 15px;
+}
+
+.topbar-style {
+    background-color: #58151c;
 }

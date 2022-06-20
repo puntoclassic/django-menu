@@ -1,0 +1,10 @@
+{% load commerce_filters %}
+<li class="nav-item">
+    {% if request.path|endswith:item.slug %}
+        <a class="nav-link active me-2"
+           href="{% url 'category-show' slug=item.slug %}">{{ item.name }}</a>
+    {% else %}
+        <a class="nav-link nav-pill-item me-2"
+           href="{% url 'category-show' slug=item.slug %}">{{ item.name }}</a>
+    {% endif %}
+</li>

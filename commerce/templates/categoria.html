@@ -1,6 +1,49 @@
-{% extends 'layouts/base.html' %}
-{% block page_title %}Home{% endblock %}
-
+{% extends "layouts/base.html" %}
+{% block page_title %}
+    Categoria {{ category.name }}
+{% endblock page_title %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}
+{% block nav %}
+    <div class="g-0 row">
+        <div class="col-lg-12 d-flex justify-content-center align-items-center">
+            {% include "widgets/category-pills.html" %}
+        </div>
+    </div>
+    <hr class="mt-4 ms-4 me-4 m-0" />
+{% endblock nav %}
 {% block content %}
-
-{% endblock %}
+    <div class="row g-0 p-4 flex-grow-1">
+        <div class="col-lg-12">
+            <div class="row g-0">
+                {% for food in category.foods.all %}
+                    {% include "widgets/food-item.html" with item=food %}
+                {% endfor %}
+            </div>
+            <div class="row g-0"></div>
+            <div class="row g-0"></div>
+        </div>
+    </div>
+{% endblock content %}
+{% block topbar %}
+    <div class="g-0 row">
+        <div class="col-lg-12">
+            <div class="row g-0 topbar-style">
+                <div class="col-lg-4 d-flex justify-content-start align-items-center p-2">
+                    {% include "widgets/global-search-form.html" %}
+                </div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">
+                    {% include "widgets/cart-button.html" %}
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-link text-light" href="{% url 'profilo' %}"><i class="bi bi-globe2 pe-2"></i>Profilo</a>
+                        <a class="btn btn-link text-light" href="{% url 'logout' %}"><i class="bi-box-arrow-right pe-2"></i>Esci</a>
+                    {% else %}
+                        {% include "widgets/login-button.html" %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock topbar %}

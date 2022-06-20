@@ -26,16 +26,4 @@ class CategoriaListView(DetailView):
         category = get_object_or_404(Category, slug=self.kwargs['slug'])
         return self.model.objects.filter(slug=self.kwargs['slug']).first()
 
-    '''def get(self, request, *args, **kwargs):      
-        category = get_object_or_404(Category, slug=self.kwargs['permalink'])
-        if category:
-            self.children_categories = Category.objects.filter(slug=kwargs["permalink"]).first().get_children()
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data["children_categories"] = self.children_categories
-        context_data["anchestors_categories"] = self.anchestors_categories
-        return context_data'''
-
 # profile views

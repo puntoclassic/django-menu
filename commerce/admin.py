@@ -14,5 +14,4 @@ class AdminCategory(admin.ModelAdmin):
 
 @admin.register(Food)
 class AdminFood(admin.ModelAdmin):
-    pass
-
+    list_display = ('name', 'price', 'ingredients', 'default_category',)
