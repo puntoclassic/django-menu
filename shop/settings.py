@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'impostazioni',
     'profilo',
     'solo',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 
@@ -150,8 +153,9 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'profilo'
-AUTHENTICATION_BACKENDS = ['shop.utils.EmailBackend',
-                           ]
+AUTHENTICATION_BACKENDS = [   
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 
@@ -161,4 +165,10 @@ EMAIL_HOST_USER = env('MAIL_USERNAME')
 EMAIL_HOST_PASSWORD = env('MAIL_PASSWORD')
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
-LOGIN_URL = "/profilo/login"
+LOGIN_URL = "/auth/login"
+
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS=True
+ACCOUNT_AUTHENTICATION_METHOD="email"
+ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_EMAIL_VERIFICATION="mandatory"
+ACCOUNT_CONFIRM_EMAIL_ON_GET=True

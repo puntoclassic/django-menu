@@ -4,3 +4,4 @@ db.sqlite3
 /external_data
 specifiche.txt
 /public/assets
+/myenv

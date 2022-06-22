@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, UpdateView, CreateView
-from django.contrib.auth.views import LoginView, PasswordResetConfirmView,  PasswordChangeDoneView, LogoutView,  PasswordResetView, PasswordChangeView, PasswordResetDoneView
+from django.contrib.auth.views import PasswordResetConfirmView,  PasswordChangeDoneView, LogoutView,  PasswordResetView, PasswordChangeView, PasswordResetDoneView
 
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -8,13 +8,12 @@ from django.contrib import messages
 from .forms import AccountInformazioniEditForm, ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
-
+from allauth.account.views import LoginView
 from .models import User
 # Create your views here.
 
 
 class CustomLoginView(LoginView):
-    template_name = "profilo/login.html"
     form_class = CustomLoginForm
     redirect_url = reverse_lazy('account')
 
@@ -22,7 +21,8 @@ class CustomLoginView(LoginView):
 class CustomSignInView(CreateView):
     template_name = "profilo/signin.html"
     form_class = CustomSignInForm
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('login') 
+ 
 
 
 class CustomLogoutView(LogoutView):
@@ -31,8 +31,9 @@ class CustomLogoutView(LogoutView):
 
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordRecoveryForm
-    subject_template_name = "profilo/emails/recupera-password-subject.html"
-    email_template_name = "profilo/emails/recupera-password-body.html"
+    subject_template_name = "account/email/recupera-password-subject.html"
+    email_template_name = "account/email/recupera-password-body.html"
+    html_email_template_name = "account/email/recupera-password-body.html"
     template_name = "profilo/recupera-password/recupera-password-1.html"
 
 

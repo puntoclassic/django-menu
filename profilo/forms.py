@@ -1,10 +1,11 @@
 from django.contrib.auth.forms import UsernameField, UserCreationForm, PasswordResetForm, UserChangeForm, AuthenticationForm
 from django import forms
 from .models import User
+from allauth.account.forms import LoginForm
 
 
-class CustomLoginForm(AuthenticationForm):
-    username = UsernameField(widget=forms.TextInput(
+class CustomLoginForm(LoginForm):
+    login = UsernameField(widget=forms.TextInput(
         attrs={"autofocus": True, "class": 'form-control'}))
     password = forms.CharField(
         label="Password",
