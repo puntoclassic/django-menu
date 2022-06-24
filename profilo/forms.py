@@ -14,7 +14,6 @@ class CustomLoginForm(LoginForm):
             attrs={"autocomplete": "current-password", "class": 'form-control'}),
     )
 
-
 class CustomSignInForm(UserCreationForm):
     error_css_class = "is-invalid"
     username = UsernameField(widget=forms.TextInput(

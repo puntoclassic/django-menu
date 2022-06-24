@@ -12,7 +12,6 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ('first_name', 'last_name',
                     'email', 'is_staff',)
-
     list_display_links = ('first_name','last_name','email')
 
     fieldsets = UserAdmin.fieldsets 

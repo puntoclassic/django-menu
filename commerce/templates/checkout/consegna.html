@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+{% block page_title %}
+    Home
+{% endblock page_title %}
+{% block topbar %}
+    <div class="g-0 row">
+        <div class="col-lg-12">
+            <div class="row g-0 topbar-style">
+                <div class="col-lg-4 d-flex justify-content-start align-items-center p-2">
+                    {% include "widgets/global-search-form.html" %}
+                </div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">
+                    {% include "widgets/cart-button.html" %}
+                    {% include "widgets/topbar-usermanage.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock topbar %}
+{% block content %}
+    <div class="row g-0 flex-grow-1 p-4">
+        <form method="post" class="col-lg-4">
+            {% csrf_token %}
+            <p>Scegli il modo in cui vuoi ricevere il tuo ordine</p>
+            {{ form.errors }}
+            <div class="form-row mb-3">{{ form.tipoConsegna }}</div>
+            <div class="form-row">
+                <button type="submit" class="btn btn-success">Vai</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

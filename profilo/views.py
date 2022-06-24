@@ -2,7 +2,6 @@ from django.views.generic import TemplateView, UpdateView, CreateView
 from django.contrib.auth.views import PasswordResetConfirmView,  PasswordChangeDoneView, LogoutView,  PasswordResetView, PasswordChangeView, PasswordResetDoneView
 
 from django.urls import reverse_lazy, reverse
-from django.views import generic
 from django.contrib import messages
 
 from .forms import AccountInformazioniEditForm, ContactForm, CustomLoginForm, CustomPasswordRecoveryForm, CustomSignInForm
@@ -17,17 +16,13 @@ class CustomLoginView(LoginView):
     form_class = CustomLoginForm
     redirect_url = reverse_lazy('account')
 
-
 class CustomSignInView(CreateView):
     template_name = "profilo/signin.html"
     form_class = CustomSignInForm
     success_url = reverse_lazy('login') 
- 
-
 
 class CustomLogoutView(LogoutView):
     template_name = "profilo/logout.html"
-
 
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordRecoveryForm
@@ -36,23 +31,18 @@ class CustomPasswordResetView(PasswordResetView):
     html_email_template_name = "account/email/recupera-password-body.html"
     template_name = "profilo/recupera-password/recupera-password-1.html"
 
-
 class CustomPasswordResetDone(PasswordResetDoneView):
     template_name = "profilo/recupera-password/recupera-password-2.html"
-
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = "profilo/recupera-password/recupera-password-3.html"
 
-
 class CustomPasswordResetCompleted(PasswordChangeDoneView):
     template_name = "profilo/recupera-password/recupera-password-4.html"
-
 
 class ProfiloView(LoginRequiredMixin, TemplateView):
     template_name = "profilo/index.html"
     redirect_field_name = 'redirect_to'
-
 
 class AccountInviaMessaggio(LoginRequiredMixin, FormView):
     template_name = 'form-contatto/form-contatto-1.html'
@@ -69,14 +59,11 @@ class AccountInviaMessaggio(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-
 class AccountInviaMessaggioDone(LoginRequiredMixin, TemplateView):
     template_name = 'form-contatto/form-contatto-2.html'
 
-
 class AccountInformazioniProfiloView(TemplateView):
     template_name = "profilo/informazioni-profilo/view.html"
-
 
 class AccountInformazioniProfiloEdit(UpdateView):
     model = User

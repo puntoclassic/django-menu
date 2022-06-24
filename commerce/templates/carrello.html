@@ -35,66 +35,77 @@
     <div class="my-3">
         <div class="col-lg-12 p-4">
             <div class="col-lg-12 flex-grow-1">
-                <div class="row g-0 ms-4 me-4">
+                <div class="row g-0">
                     {% if not request.session.cart_items %}
                         <p>Non ci sono elementi nel carrello</p>
                     {% else %}
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Cibo</th>
-                                    <th class="text-center" scope="col">Quantità</th>
-                                    <th class="text-center" scope="col">Prezzo</th>
-                                    <th class="text-center" scope="col">Azioni</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in request.session.cart_items.values %}
-                                    <tr class="align-middle">
-                                        <td>{{ item.name }}</td>
-                                        <td class="text-center">{{ item.quantity }}</td>
-                                        <td class="text-center">{{ item.price }} €</td>
-                                        <td class="text-center">
-                                            <div class="d-flex flex-row justify-content-center">
-                                                <form method="post" class="d-flex m-0" action="{% url 'increase-qty' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="food_id" value="{{ item.id }}" />
-                                                    <button type="submit" class="btn btn-link">
-                                                        <i class="bi bi-bag-plus"></i>
-                                                    </button>
-                                                </form>
-                                                <form method="post" class="d-flex m-0" action="{% url 'decrease-qty' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="food_id" value="{{ item.id }}" />
-                                                    <button type="submit" class="btn btn-link">
-                                                        <i class="bi bi-bag-dash"></i>
-                                                    </button>
-                                                </form>
-                                                <form method="post"
-                                                      class="d-flex m-0"
-                                                      action="{% url 'remove-from-cart' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="food_id" value="{{ item.id }}" />
-                                                    <button type="submit" class="btn btn-link">
-                                                        <i class="bi bi-bag-x"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td ></td>
-                                    <td ></td>
-                                    <td class="text-center">
-                                        <b>Totale</b>
-                                    </td>
-                                    <td class="text-center">{{ request.session.cart_amount }} €</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <div class="col-lg-12">
+                            <div class="row g-0">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Cibo</th>
+                                            <th class="text-center" scope="col">Quantità</th>
+                                            <th class="text-center" scope="col">Prezzo</th>
+                                            <th class="text-center" scope="col">Azioni</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in request.session.cart_items.values %}
+                                            <tr class="align-middle">
+                                                <td>{{ item.name }}</td>
+                                                <td class="text-center">{{ item.quantity }}</td>
+                                                <td class="text-center">{{ item.price }} €</td>
+                                                <td class="text-center">
+                                                    <div class="d-flex flex-row justify-content-center">
+                                                        <form method="post" class="d-flex m-0" action="{% url 'increase-qty' %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="food_id" value="{{ item.id }}" />
+                                                            <button type="submit" class="btn btn-link">
+                                                                <i class="bi bi-bag-plus"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form method="post" class="d-flex m-0" action="{% url 'decrease-qty' %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="food_id" value="{{ item.id }}" />
+                                                            <button type="submit" class="btn btn-link">
+                                                                <i class="bi bi-bag-dash"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form method="post"
+                                                              class="d-flex m-0"
+                                                              action="{% url 'remove-from-cart' %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="food_id" value="{{ item.id }}" />
+                                                            <button type="submit" class="btn btn-link">
+                                                                <i class="bi bi-bag-x"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td class="text-center">
+                                                <b>Totale</b>
+                                            </td>
+                                            <td class="text-center">{{ request.session.cart_amount }} €</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-4">
+                                    {% if user.is_authenticated %}
+                                        <a class="btn btn-success" href="{% url 'checkout-consegna' %}">Ordina</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
             </div>

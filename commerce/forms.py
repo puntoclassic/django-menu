@@ -1,4 +1,5 @@
 from django import forms
+from pkg_resources import require
 
 
 class AddToCartForm(forms.Form):
@@ -19,3 +20,13 @@ class DecreaseQtyForm(forms.Form):
 
 class RemoveFromCartForm(forms.Form):
     food_id = forms.IntegerField(required=True)
+
+class CheckoutConsegnaForm(forms.Form):
+    tipoConsegna = forms.ChoiceField(required=True,choices=[
+        ('domicilio',"Consegna a domicilio 2 €"),
+        ('asporto','Ritiro in negozio',)
+    ],widget=forms.Select(attrs={'class':"form-control"}))
+
+class CheckoutIndirizzoOrarioForm(forms.Form):
+    indirizzo = forms.CharField(required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
+    orario = forms.CharField(required=True,widget=forms.TextInput(attrs={"class":"form-control"}))

@@ -1,17 +1,22 @@
 
 from decimal import Decimal
+from mimetypes import init
+from pipes import Template
 from typing import Dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, DetailView
-
+from django.views.generic import TemplateView, DetailView, FormView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from requests import request
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
 
 from .models import Category
+from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm
 
 # Create your views here.
 
@@ -126,3 +131,79 @@ class DecreaseQtyView(View):
             request.session["cart_items"] = cart_items
             request.session["cart_amount"] = str(cart_amount)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def cart_not_empty(self):
+    if self.request.user.is_authenticated:        
+        return self.request.session.has_key("cart_items") and len(self.request.session.get("cart_items"))>0
+    else:
+        return False   
+
+class CheckoutConsegnaView(UserPassesTestMixin,FormView):
+    template_name: str = "checkout/consegna.html"   
+    form_class = CheckoutConsegnaForm
+    tipoConsegna = ""
+   
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["tipoConsegna"] = self.request.session.get("checkout_tipoConsegna","domicilio")
+        return initial
+
+    def form_valid(self, form):
+        self.tipoConsegna = form.cleaned_data["tipoConsegna"]
+        self.request.session["checkout_tipoConsegna"] = self.tipoConsegna
+        return super().form_valid(form)
+    
+    def get_success_url(self) -> str:     
+        if self.tipoConsegna == 'domicilio':            
+            return reverse_lazy('checkout-indirizzo-orario')
+        else:
+            return reverse_lazy('checkout-riepilogo')     
+    
+    def test_func(self):
+        return cart_not_empty(self)       
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('show-cart'))   
+    
+
+class CheckoutIndirizzoOrarioView(UserPassesTestMixin,FormView):
+    template_name: str = "checkout/indirizzo-orario.html"
+    form_class = CheckoutIndirizzoOrarioForm    
+    success_url = reverse_lazy("checkout-riepilogo")
+   
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["orario"] = self.request.session.get("checkout_orario")
+        initial["indirizzo"] = self.request.session.get("checkout_indirizzo")
+
+        print(initial)
+        return initial
+
+    def form_valid(self, form):
+
+        self.request.session["checkout_orario"] = form.cleaned_data["orario"]
+        self.request.session["checkout_indirizzo"] = form.cleaned_data["indirizzo"]
+
+        return super().form_valid(form)     
+    
+    def test_func(self):
+        return cart_not_empty(self) 
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('show-cart'))      
+
+class CheckoutRiepilogoView(UserPassesTestMixin,TemplateView):
+    template_name: str = "checkout/riepilogo.html"
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def test_func(self):
+        return cart_not_empty(self)   
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('show-cart')) 
+
+class CheckoutConfermaView(LoginRequiredMixin,TemplateView):
+    template_name: str = "checkout/conferma.html"
+

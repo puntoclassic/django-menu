@@ -1,5 +1,10 @@
+from decimal import Decimal
+import string
+from unicodedata import decimal
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.utils.encoding import force_str
+
 
 register = template.Library()
 
@@ -17,3 +22,14 @@ def contains(value, arg):
 @stringfilter
 def startswith(value, arg):
     return value.startswith(arg)
+
+@register.filter
+@stringfilter
+def aggiungiCosti(value,arg):
+    return Decimal(Decimal(value)+Decimal(arg))
+
+
+@register.filter
+def intdot(val_orig):  
+    
+    return force_str(val_orig).replace(',', '.')
