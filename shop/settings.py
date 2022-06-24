@@ -58,7 +58,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+   
 ]
+
 
 
 MIDDLEWARE = [
@@ -165,6 +167,7 @@ EMAIL_HOST_USER = env('MAIL_USERNAME')
 EMAIL_HOST_PASSWORD = env('MAIL_PASSWORD')
 EMAIL_USE_SSL = True
 EMAIL_USE_TLS = False
+EMAIL_FROM_NAME = env('MAIL_FROM_NAME')
 LOGIN_URL = "/auth/login"
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS=True

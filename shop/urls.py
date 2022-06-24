@@ -9,4 +9,5 @@ urlpatterns = [
     path('', include('commerce.urls')),
     path('auth/', include('profilo.urls')),
     path('auth/', include('allauth.urls')),
+   
 ]

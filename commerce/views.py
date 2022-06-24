@@ -10,11 +10,14 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from django.core.mail import BadHeaderError, send_mail
+from django.template.loader import render_to_string, get_template
 from django.contrib.auth.mixins import LoginRequiredMixin
 from requests import request
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
+from impostazioni.models import GeneraliModel
+from shop.settings import EMAIL_FROM_NAME, EMAIL_HOST_USER
 
 from .models import Category, Order, OrderStatus
 from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
@@ -238,8 +241,19 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
 class CheckoutConfermaView(LoginRequiredMixin,TemplateView):
     template_name: str = "checkout/conferma.html"    
 
+    def get(self, request, *args, **kwargs):
+        
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context_data  =super().get_context_data(**kwargs)
         context_data["order_id"] = kwargs.get("id")
+
+        message = get_template('account/email/email_order_created.html').render({
+             "base_info": GeneraliModel.get_solo(),
+            "order_id":kwargs.get("id")
+        })
+ 
+        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)
         return context_data
 
