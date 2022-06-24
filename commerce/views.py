@@ -173,10 +173,8 @@ class CheckoutIndirizzoOrarioView(UserPassesTestMixin,FormView):
    
     def get_initial(self):
         initial = super().get_initial()
-        initial["orario"] = self.request.session.get("checkout_orario")
-        initial["indirizzo"] = self.request.session.get("checkout_indirizzo")
-
-        print(initial)
+        initial["orario"] = self.request.session.get("checkout_orario","")
+        initial["indirizzo"] = self.request.session.get("checkout_indirizzo","")
         return initial
 
     def form_valid(self, form):
