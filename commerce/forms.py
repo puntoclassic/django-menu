@@ -30,3 +30,6 @@ class CheckoutConsegnaForm(forms.Form):
 class CheckoutIndirizzoOrarioForm(forms.Form):
     indirizzo = forms.CharField(required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
     orario = forms.CharField(required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
+
+class CheckoutRiepilogoOrdineForm(forms.Form):
+    note = forms.CharField(required=False)

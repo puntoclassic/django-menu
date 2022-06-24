@@ -25,5 +25,6 @@ class AdminOrderStatus(admin.ModelAdmin):
 class AdminOrder(admin.ModelAdmin):
     list_display = ('id','customer_name','subTotal',)
 
-    def customer_name(self,obj):
-        return f"{obj.first_name},{obj.last_name}"
+    def customer_name(self,obj:Order): 
+        return f"{obj.customer.first_name} {obj.customer.last_name}"
+    customer_name.short_description = "Cliente"

@@ -58,7 +58,7 @@ class OrderStatus(models.Model):
         verbose_name_plural = "stati ordine"
 
 class Order(models.Model):
-    customer = models.ForeignKey(User,related_name='orders',name='Cliente',blank=False,null=True,on_delete=models.SET_NULL)
+    customer = models.ForeignKey(User,related_name='orders',verbose_name="Cliente",blank=False,null=True,on_delete=models.SET_NULL)
     subTotal = models.DecimalField(verbose_name='Totale', max_digits=4, decimal_places=2,blank=False,null=False)
     shippingCosts  = models.DecimalField(verbose_name='Costi di consegna', max_digits=4, decimal_places=2,blank=True,null=False)
     shippingAddress = models.TextField(verbose_name='Indirizzo di consegna',blank=True,null=True)
@@ -68,7 +68,7 @@ class Order(models.Model):
     note = models.TextField(blank=True,null=True,verbose_name='Note ordine')
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     class Meta:
         verbose_name = "ordine"

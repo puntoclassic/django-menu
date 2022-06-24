@@ -17,5 +17,5 @@ urlpatterns = [
      path('checkout/consegna', CheckoutConsegnaView.as_view() ,name="checkout-consegna"),
      path('checkout/consegna/dettagli', CheckoutIndirizzoOrarioView.as_view() ,name="checkout-indirizzo-orario"),
      path('checkout/riepilogo', CheckoutRiepilogoView.as_view() ,name="checkout-riepilogo"),
-     path('checkout/ordine/<int:id_ordine>/confermato', CheckoutRiepilogoView.as_view() ,name="checkout-riepilogo")
+     path('checkout/ordine/<int:id>/confermato', CheckoutConfermaView.as_view() ,name="checkout-conferma")
 ]

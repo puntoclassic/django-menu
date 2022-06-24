@@ -3,9 +3,10 @@ from decimal import Decimal
 from mimetypes import init
 from pipes import Template
 from typing import Dict
+from webbrowser import get
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -15,8 +16,8 @@ from requests import request
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
 
-from .models import Category
-from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm
+from .models import Category, Order, OrderStatus
+from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
 
 # Create your views here.
 
@@ -49,24 +50,23 @@ class AddToCartView(View):
         form = AddToCartForm(request.POST)
 
         if form.is_valid():
-            cart_items = request.session.get('cart_items', {})
-            cart_amount = Decimal(0.00)
+            cart = get_cart(request)            
+            cart["amount"] = Decimal(0.00)
 
-            if form.cleaned_data["food_id"] in cart_items.keys():
-                cart_items[form.cleaned_data["food_id"]]["quantity"] += 1
+            if form.cleaned_data["food_id"] in cart["items"].keys():
+                cart["items"][form.cleaned_data["food_id"]]["quantity"] += 1
             else:
-                cart_items[form.cleaned_data["food_id"]] = {
+                cart["items"][form.cleaned_data["food_id"]] = {
                     "id": form.cleaned_data["food_id"],
                     "name": form.cleaned_data["food_name"],
                     "quantity": 1,
                     "price": str(form.cleaned_data["food_price"])
                 }
 
-            for item in cart_items.values():
-                cart_amount += Decimal(item["price"]) * item["quantity"]
-
-            request.session["cart_items"] = cart_items
-            request.session["cart_amount"] = str(cart_amount)
+            for item in cart["items"].values():
+                cart["amount"] += Decimal(item["price"]) * item["quantity"]
+            cart["amount"] =str(cart["amount"])
+            request.session["cart"] = cart
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -75,18 +75,18 @@ class RemoveFromCartView(View):
     def post(self, request, *args, **kwargs):
         form = RemoveFromCartForm(request.POST)
 
-        if form.is_valid():
-            cart_items: Dict = request.session.get('cart_items', {})
-            cart_amount = Decimal(0.00)
+        if form.is_valid():          
 
+            cart = get_cart(request)
             row_id = str(form.cleaned_data["food_id"])
-            del cart_items[row_id]
+            del cart["items"][row_id]
 
-            for item in cart_items.values():
-                cart_amount += Decimal(item["price"]) * item["quantity"]
+            cart["amount"] = 0.00
 
-            request.session["cart_items"] = cart_items
-            request.session["cart_amount"] = str(cart_amount)
+            for item in cart["items"].values():
+                cart["amount"] += Decimal(item["price"]) * item["quantity"]
+            cart["amount"] =str(cart["amount"])
+            request.session["cart"] = cart
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -95,18 +95,18 @@ class IncreaseQtyView(View):
         form = IncreaseQtyForm(request.POST)
 
         if form.is_valid():
-            cart_items: Dict = request.session.get('cart_items', {})
-            cart_amount = Decimal(0.00)
 
+            cart = get_cart(request)
             row_id = str(form.cleaned_data["food_id"])
 
-            cart_items[row_id]["quantity"] += 1
+            cart["items"][row_id]["quantity"] += 1
+            cart["amount"] = 0.00
 
-            for item in cart_items.values():
-                cart_amount += Decimal(item["price"]) * item["quantity"]
+            for item in cart["items"].values():
+                cart["amount"] += Decimal(item["price"]) * item["quantity"]
 
-            request.session["cart_items"] = cart_items
-            request.session["cart_amount"] = str(cart_amount)
+            cart["amount"] =str(cart["amount"])
+            request.session["cart"] = cart
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -115,21 +115,21 @@ class DecreaseQtyView(View):
         form = DecreaseQtyForm(request.POST)
 
         if form.is_valid():
-            cart_items = request.session.get('cart_items', {})
-            cart_amount = Decimal(0.00)
+            cart = get_cart(request)
 
             row_id = str(form.cleaned_data["food_id"])
 
-            if cart_items[row_id]["quantity"] == 1:
-                del cart_items[row_id]
+            if cart["items"][row_id]["quantity"] == 1:
+                del cart["items"][row_id]
             else:
-                cart_items[row_id]["quantity"] -= 1
+                cart["items"][row_id]["quantity"] -= 1
 
-            for item in cart_items.values():
-                cart_amount += Decimal(item["price"]) * item["quantity"]
+            for item in cart["items"].values():
+                cart["amount"] += Decimal(item["price"]) * item["quantity"]
+            
+            cart["amount"] =str(cart["amount"])
 
-            request.session["cart_items"] = cart_items
-            request.session["cart_amount"] = str(cart_amount)
+            request.session["cart"] = cart
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def cart_not_empty(self):
@@ -138,23 +138,33 @@ def cart_not_empty(self):
     else:
         return False   
 
+def get_cart(request):
+    return request.session.get("cart",{
+                "items":{},
+                "amount":"",
+                "tipoConsegna":"domicilio",
+                "orario":"",
+                "indirizzo":"",                
+            })
+
 class CheckoutConsegnaView(UserPassesTestMixin,FormView):
     template_name: str = "checkout/consegna.html"   
     form_class = CheckoutConsegnaForm
-    tipoConsegna = ""
+    cart = None
    
     def get_initial(self):
         initial = super().get_initial()
-        initial["tipoConsegna"] = self.request.session.get("checkout_tipoConsegna","domicilio")
+        self.cart = get_cart(self.request)
+        initial["tipoConsegna"] = self.cart["tipoConsegna"]
         return initial
 
     def form_valid(self, form):
-        self.tipoConsegna = form.cleaned_data["tipoConsegna"]
-        self.request.session["checkout_tipoConsegna"] = self.tipoConsegna
+        self.cart["tipoConsegna"] = form.cleaned_data["tipoConsegna"]        
         return super().form_valid(form)
     
     def get_success_url(self) -> str:     
-        if self.tipoConsegna == 'domicilio':            
+        self.request.session["cart"] = self.cart
+        if self.cart["tipoConsegna"] == 'domicilio':            
             return reverse_lazy('checkout-indirizzo-orario')
         else:
             return reverse_lazy('checkout-riepilogo')     
@@ -170,17 +180,20 @@ class CheckoutIndirizzoOrarioView(UserPassesTestMixin,FormView):
     template_name: str = "checkout/indirizzo-orario.html"
     form_class = CheckoutIndirizzoOrarioForm    
     success_url = reverse_lazy("checkout-riepilogo")
+    cart = None
    
     def get_initial(self):
         initial = super().get_initial()
-        initial["orario"] = self.request.session.get("checkout_orario","")
-        initial["indirizzo"] = self.request.session.get("checkout_indirizzo","")
+        self.cart = get_cart(self.request)
+        initial["orario"] = self.cart["orario"]
+        initial["indirizzo"] = self.cart["indirizzo"]
         return initial
 
     def form_valid(self, form):
-
-        self.request.session["checkout_orario"] = form.cleaned_data["orario"]
-        self.request.session["checkout_indirizzo"] = form.cleaned_data["indirizzo"]
+        
+        self.cart["orario"] = form.cleaned_data["orario"]
+        self.cart["indirizzo"] = form.cleaned_data["indirizzo"]
+        self.request.session["cart"] = self.cart
 
         return super().form_valid(form)     
     
@@ -190,11 +203,31 @@ class CheckoutIndirizzoOrarioView(UserPassesTestMixin,FormView):
     def handle_no_permission(self) -> HttpResponseRedirect:
         return redirect(reverse_lazy('show-cart'))      
 
-class CheckoutRiepilogoView(UserPassesTestMixin,TemplateView):
+class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
     template_name: str = "checkout/riepilogo.html"
+    form_class = CheckoutRiepilogoOrdineForm
+    ordine = Order()
+    
+    def form_valid(self, form):
+        cart = get_cart(self.request)
+        note = form.cleaned_data["note"]        
+        self.ordine.customer = self.request.user
+        self.ordine.note = note
+        self.ordine.shippingAddress = cart["indirizzo"]
+        self.ordine.shippingDeliveryTime = cart["orario"]
+        self.ordine.shippingRequired = True if cart["tipoConsegna"] == "domicilio" else False
+        self.ordine.shippingCosts = 2.00 if cart["tipoConsegna"] == "domicilio" else 0.00
+        self.ordine.subTotal = Decimal(cart["amount"])+Decimal(self.ordine.shippingCosts)
+        self.ordine.orderStatus = OrderStatus.objects.filter(description="Ordine creato").first()
+        self.ordine.save()  
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+        del self.request.session["cart"]        
+
+        return super().form_valid(form)
+
+
+    def get_success_url(self) -> str:
+        return reverse("checkout-conferma",kwargs={"id":self.ordine.id})
 
     def test_func(self):
         return cart_not_empty(self)   
@@ -203,5 +236,10 @@ class CheckoutRiepilogoView(UserPassesTestMixin,TemplateView):
         return redirect(reverse_lazy('show-cart')) 
 
 class CheckoutConfermaView(LoginRequiredMixin,TemplateView):
-    template_name: str = "checkout/conferma.html"
+    template_name: str = "checkout/conferma.html"    
+
+    def get_context_data(self, **kwargs):
+        context_data  =super().get_context_data(**kwargs)
+        context_data["order_id"] = kwargs.get("id")
+        return context_data
 
