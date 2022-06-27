@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',   
-    'rest_framework',
+    'rest_framework',  
+
 ]
 
 MIDDLEWARE = [
@@ -182,3 +183,10 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 } 
+
+STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
+STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
+STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
+DJSTRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET")  
+DJSTRIPE_USE_NATIVE_JSONFIELD = True  
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"

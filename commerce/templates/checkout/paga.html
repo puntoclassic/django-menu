@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+{% load commerce_filters %}
+{% block page_title %}
+    Paga
+{% endblock page_title %}
+{% block topbar %}
+    <div class="g-0 row">
+        <div class="col-lg-12">
+            <div class="row g-0 topbar-style">
+                <div class="col-lg-4 d-flex justify-content-start align-items-center p-2">
+                    {% include "widgets/global-search-form.html" %}
+                </div>
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">
+                    {% include "widgets/cart-button.html" %}
+                    {% include "widgets/topbar-usermanage.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock topbar %}
+{% block content %}
+    <div class="row g-0 flex-grow-1 p-4">
+        <script src="https://js.stripe.com/v3/"></script>
+        <script type="text/javascript">
+            // Create a Stripe client.
+            var stripe = Stripe("{{STRIPE_PUBLIC_KEY}}");
+            stripe.redirectToCheckout({
+              // Get the id field from the Checkout Session creation API response
+                  sessionId: '{{CHECKOUT_SESSION_ID}}'
+              })
+              .then(function (result) {
+                  // If `redirectToCheckout` fails due to a browser or network
+                  // error, display the localized error message to your customer
+                  // using `result.error.message`.
+                  if (result.error) {
+                      alert(result.error.message);
+                  }
+              })
+              .catch(function (error) {
+                console.error("Error:", error);
+             });
+        </script>
+    </div>
+{% endblock content %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

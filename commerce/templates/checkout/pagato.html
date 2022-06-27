@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block page_title %}
-    Home
+    Ordine pagato
 {% endblock page_title %}
 {% block topbar %}
     <div class="g-0 row">
@@ -22,10 +22,7 @@
     <div class="row g-0 flex-grow-1 ">
         <div class="col-lg-12 d-flex justify-content-center align-items-center flex-column">
             <div class="row g-0">
-                <div class="alert alert-success" role="alert">Il tuo ordine con codice {{ order_id }} è stato creato</div>
-            </div>
-            <div class="row g-0">
-                <a class="btn btn-info" href="{% url 'checkout-paga' id=order_id %}">Paga ora</a>
+                <div class="alert alert-success" role="alert">Il tuo pagamento è stato inviato.</div>
             </div>
         </div>
     </div>

@@ -53,7 +53,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in request.session.cart_items.values %}
+                        {% for item in request.session.cart.items.values %}
                             <tr class="align-middle">
                                 <td>{{ item.name }}</td>
                                 <td class="text-center">{{ item.quantity }}</td>
@@ -75,9 +75,9 @@
                                 <b>Totale</b>
                             </td>
                             {% if request.session.checkout_tipoConsegna == "asporto" %}
-                                <td class="text-center">{{ request.session.cart_amount }} €</td>
+                                <td class="text-center">{{ request.session.cart.amount }} €</td>
                             {% else %}
-                                <td class="text-center">{{ request.session.cart_amount|aggiungiCosti:"2"|intdot }} €</td>
+                                <td class="text-center">{{ request.session.cart.amount|aggiungiCosti:2|intdot }} €</td>
                             {% endif %}
                         </tr>
                     </tfoot>

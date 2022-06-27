@@ -66,10 +66,17 @@ class Order(models.Model):
     shippingRequired = models.BooleanField(verbose_name='Consegna a domicilio',default=False)
     orderStatus = models.ForeignKey(OrderStatus,blank=False,null=True,on_delete=models.SET_NULL,verbose_name='Stato ordine')
     note = models.TextField(blank=True,null=True,verbose_name='Note ordine')
-
+    payed = models.BooleanField(verbose_name='Pagato',default=False)
+    
     def __str__(self):
         return str(self.id)
 
     class Meta:
         verbose_name = "ordine"
         verbose_name_plural = "ordini"
+
+class OrderDetail(models.Model):
+    order = models.ForeignKey(Order,related_name="order_details",verbose_name='Ordine',blank=False,null=True,on_delete=models.SET_NULL)
+    name = models.CharField(max_length=255)
+    quantity = models.IntegerField(blank=False,default=1)
+    price =  models.DecimalField(verbose_name='Prezzo', max_digits=4, decimal_places=2,blank=True,null=False)

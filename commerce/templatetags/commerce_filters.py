@@ -25,8 +25,8 @@ def startswith(value, arg):
 
 @register.filter
 @stringfilter
-def aggiungiCosti(value,arg):
-    return Decimal(Decimal(value)+Decimal(arg))
+def aggiungiCosti(value,arg):    
+    return Decimal(value)+Decimal(arg)
 
 
 @register.filter

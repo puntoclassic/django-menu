@@ -1,7 +1,7 @@
 from django.contrib import admin
 from commerce.actions import categories_update_slug
 
-from commerce.models import Category, Food, Order, OrderStatus
+from commerce.models import Category, Food, Order, OrderDetail, OrderStatus
 
 # Register your models here.
 
@@ -28,3 +28,7 @@ class AdminOrder(admin.ModelAdmin):
     def customer_name(self,obj:Order): 
         return f"{obj.customer.first_name} {obj.customer.last_name}"
     customer_name.short_description = "Cliente"
+
+@admin.register(OrderDetail)
+class AdminOrderDetail(admin.ModelAdmin):
+    pass

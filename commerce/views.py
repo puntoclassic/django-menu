@@ -1,10 +1,7 @@
 
 from decimal import Decimal
-from mimetypes import init
 from pipes import Template
-from typing import Dict
-from webbrowser import get
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -14,16 +11,18 @@ from django.core.mail import BadHeaderError, send_mail
 from django.template.loader import render_to_string, get_template
 from django.contrib.auth.mixins import LoginRequiredMixin
 from requests import request
+import stripe
+
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
 from impostazioni.models import GeneraliModel
-from shop.settings import EMAIL_FROM_NAME, EMAIL_HOST_USER
+from shop.settings import EMAIL_FROM_NAME, EMAIL_HOST_USER, env
 
-from .models import Category, Order, OrderStatus
+from .models import Category, Order, OrderDetail, OrderStatus
 from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
 
 # Create your views here.
-
+stripe.api_key = env("STRIPE_TEST_SECRET_KEY")
 
 class HomeView(TemplateView):
     template_name = "index.html"
@@ -84,7 +83,7 @@ class RemoveFromCartView(View):
             row_id = str(form.cleaned_data["food_id"])
             del cart["items"][row_id]
 
-            cart["amount"] = 0.00
+            cart["amount"] = Decimal(0.00)
 
             for item in cart["items"].values():
                 cart["amount"] += Decimal(item["price"]) * item["quantity"]
@@ -103,7 +102,7 @@ class IncreaseQtyView(View):
             row_id = str(form.cleaned_data["food_id"])
 
             cart["items"][row_id]["quantity"] += 1
-            cart["amount"] = 0.00
+            cart["amount"] = Decimal(0.00)
 
             for item in cart["items"].values():
                 cart["amount"] += Decimal(item["price"]) * item["quantity"]
@@ -137,7 +136,7 @@ class DecreaseQtyView(View):
 
 def cart_not_empty(self):
     if self.request.user.is_authenticated:        
-        return self.request.session.has_key("cart_items") and len(self.request.session.get("cart_items"))>0
+        return self.request.session.has_key("cart") and len(self.request.session.get("cart")["items"])>0
     else:
         return False   
 
@@ -207,7 +206,8 @@ class CheckoutIndirizzoOrarioView(UserPassesTestMixin,FormView):
         return redirect(reverse_lazy('show-cart'))      
 
 class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
-    template_name: str = "checkout/riepilogo.html"
+    template_name: str = "checkout/riepilogo.html"  
+
     form_class = CheckoutRiepilogoOrdineForm
     ordine = Order()
     
@@ -224,6 +224,26 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
         self.ordine.orderStatus = OrderStatus.objects.filter(description="Ordine creato").first()
         self.ordine.save()  
 
+        if self.ordine.shippingRequired:
+            order_row = OrderDetail()
+            order_row.order = self.ordine
+            order_row.name = "Spese di consegna"
+            order_row.price = Decimal(self.ordine.shippingCosts)
+            order_row.quantity = 1
+            order_row.save()
+
+
+        items = self.request.session["cart"]["items"] 
+        for item in items.values():
+            order_row = OrderDetail()
+            order_row.order = self.ordine
+            order_row.name = item["name"]
+            order_row.price = Decimal(item["price"])
+            order_row.quantity = item["quantity"]
+            order_row.save()    
+
+
+
         del self.request.session["cart"]        
 
         return super().form_valid(form)
@@ -238,8 +258,19 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
     def handle_no_permission(self) -> HttpResponseRedirect:
         return redirect(reverse_lazy('show-cart')) 
 
-class CheckoutConfermaView(LoginRequiredMixin,TemplateView):
-    template_name: str = "checkout/conferma.html"    
+class CheckoutConfermaView(UserPassesTestMixin,TemplateView):
+    template_name: str = "checkout/conferma.html"  
+
+    def test_func(self):
+        if self.request.user.is_authenticated:
+            order_id = self.kwargs["id"]  
+           
+            order = Order.objects.filter(id=order_id).first()
+            if order.customer.id==self.request.user.id:
+                return True           
+            return False
+        else:
+            return False    
 
     def get(self, request, *args, **kwargs):
         
@@ -254,6 +285,119 @@ class CheckoutConfermaView(LoginRequiredMixin,TemplateView):
             "order_id":kwargs.get("id")
         })
  
-        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)
+        #send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)
         return context_data
 
+class CheckoutPagaView(UserPassesTestMixin,TemplateView):
+    template_name: str = "checkout/paga.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Creates and returns a Stripe Checkout Session
+        """
+        # Get Parent Context
+        context = super().get_context_data(**kwargs)
+
+        # to initialise Stripe.js on the front end
+        context[
+            "STRIPE_PUBLIC_KEY"
+        ] = env("STRIPE_PUBLIC_KEY")
+
+        success_url = self.request.build_absolute_uri(
+            reverse("checkout-pagato",kwargs={"id":kwargs["id"]})
+        )
+        cancel_url = self.request.build_absolute_uri(reverse("home"))                 
+
+
+        order_lines = OrderDetail.objects.filter(order_id=kwargs["id"]).all()
+
+        order_items = []
+
+        for line in order_lines:
+            order_items.append(
+                    {
+                        "price_data": {
+                            "currency": "eur",
+                            "unit_amount": int(line.price*100),
+                            "product_data": {
+                                "name": line.name,                               
+                            },
+                        },
+                        "quantity": line.quantity,
+                    },                
+            )
+
+        session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                payment_intent_data={
+                    "setup_future_usage": "off_session",                   
+                },
+                line_items=order_items,
+                mode="payment",
+                success_url=success_url,
+                cancel_url=cancel_url,
+                metadata={
+                    "order_sku":kwargs["id"]
+                }
+            )           
+
+        context["CHECKOUT_SESSION_ID"] = session.id
+
+        return context
+
+    def test_func(self):
+        if self.request.user.is_authenticated:
+            order_id = self.kwargs["id"]  
+           
+            order = Order.objects.filter(id=order_id).first()
+            if order.customer.id==self.request.user.id:
+                return True           
+            return False
+        else:
+            return False  
+
+class CheckoutPagatoView(UserPassesTestMixin,TemplateView):
+    template_name: str = "checkout/pagato.html"
+
+    def test_func(self):
+        if self.request.user.is_authenticated:
+            order_id = self.kwargs["id"]  
+           
+            order = Order.objects.filter(id=order_id).first()
+            if order.customer.id==self.request.user.id:
+                return True           
+            return False
+        else:
+            return False  
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = env('STRIPE_TEST_SECRET_KEY')
+    endpoint_secret = env('STRIPE_ENDPOINT_SECRET')
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+    
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        metadata = event["data"]["object"]['metadata']   
+        order = Order.objects.filter(id=metadata["order_sku"]).first()
+        order.payed = True
+        order.save()    
+    return HttpResponse(status=200)
