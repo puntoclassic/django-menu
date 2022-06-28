@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import *
+'''path('login', CustomLoginView.as_view(), name='login'),'''
 
-urlpatterns = [
-    path('login', CustomLoginView.as_view(), name='login'),
+urlpatterns = [   
     path('signin', CustomSignInView.as_view(), name='signin'),
     path('logout', CustomLogoutView.as_view(), name='logout'),
     path('recupera-password', CustomPasswordResetView.as_view(),

@@ -11,15 +11,15 @@ from allauth.account.views import LoginView
 from .models import User
 # Create your views here.
 
-
+'''
 class CustomLoginView(LoginView):
     form_class = CustomLoginForm
-    redirect_url = reverse_lazy('account')
+    redirect_url = reverse_lazy('account')'''
 
 class CustomSignInView(CreateView):
     template_name = "profilo/signin.html"
     form_class = CustomSignInForm
-    success_url = reverse_lazy('login') 
+    success_url = reverse_lazy('account_login') 
 
 class CustomLogoutView(LogoutView):
     template_name = "profilo/logout.html"

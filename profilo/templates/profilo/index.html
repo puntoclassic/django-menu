@@ -71,7 +71,10 @@
           <a class="btn btn-link text-light" href="{% url 'home' %}"><i class="bi bi-house pe-2"></i>Home</a>
         </div>
         <div class="col-lg-4"></div>
-        <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">{% include "widgets/cart-button.html" %}</div>
+        <div class="col-lg-4 d-flex justify-content-end align-items-center p-2 ">
+          {% include "widgets/cart-button.html" %}
+          {% include "widgets/topbar-usermanage.html" %}
+        </div>
       </div>
     </div>
   </div>

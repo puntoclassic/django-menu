@@ -19,35 +19,45 @@
   <div class="g-0 row">{% include "widgets/header.html" %}</div>
 {% endblock header %}
 {% block content %}
-  <div class="row g-0 h-100 justify-content-center align-items-center">
-    <div class="col-lg-4"></div>
-    <div class="col-lg-4">
-      <form method="post">
-        {% if form.errors %}<p class="text-danger">Impossibile accedere, email o password errata</p>{% endif %}
-        {% csrf_token %}
-        <div class="form-group pt-2">
-          <label>Email</label>
-          <input type="text"
-                 name="login"
-                 class="form-control {% if form.login.errors %}is-invalid{% endif %}"/>
-          {% if form.login.errors %}<div class="invalid-feedback">{{ form.login.errors }}</div>{% endif %}
-        </div>
-        <div class="form-group pt-2">
-          <label>Password</label>
-          <input type="password"
-                 name="password"
-                 class="form-control {% if form.password.errors %}is-invalid{% endif %}"/>
-          {% if form.password.errors %}<div class="invalid-feedback">{{ form.password.errors }}</div>{% endif %}
-        </div>
-        <div class="form-group pt-2">
-          <a href="{% url 'recupera-password' %}">Ho dimenticato la password</a>
-        </div>
-        <div class="form-group pt-4">
-          <button type="submit" class="btn btn-primary">Accedi</button>
-          <a href="{% url 'signin' %}" class="btn btn-secondary">Crea account</a>
-        </div>
-      </form>
+  <div class="row g-0 ms-4 me-4">
+    {% if messages %}
+      <div class="alert alert-info">
+        {% for message in messages %}
+          <span>{{ message }}</span>
+        </br>
+      {% endfor %}
     </div>
-    <div class="col-lg-4"></div>
+  {% endif %}
+</div>
+<div class="row g-0 flex-grow-1 justify-content-center align-items-center">
+  <div class="col-lg-4"></div>
+  <div class="col-lg-4">
+    <form method="post">
+      {% if form.errors %}<p class="text-danger">Impossibile accedere, email o password errata</p>{% endif %}
+      {% csrf_token %}
+      <div class="form-group pt-2">
+        <label>Email</label>
+        <input type="text"
+               name="login"
+               class="form-control {% if form.login.errors %}is-invalid{% endif %}"/>
+        {% if form.login.errors %}<div class="invalid-feedback">{{ form.login.errors }}</div>{% endif %}
+      </div>
+      <div class="form-group pt-2">
+        <label>Password</label>
+        <input type="password"
+               name="password"
+               class="form-control {% if form.password.errors %}is-invalid{% endif %}"/>
+        {% if form.password.errors %}<div class="invalid-feedback">{{ form.password.errors }}</div>{% endif %}
+      </div>
+      <div class="form-group pt-2">
+        <a href="{% url 'recupera-password' %}">Ho dimenticato la password</a>
+      </div>
+      <div class="form-group pt-4">
+        <button type="submit" class="btn btn-primary">Accedi</button>
+        <a href="{% url 'signin' %}" class="btn btn-secondary">Crea account</a>
+      </div>
+    </form>
   </div>
+  <div class="col-lg-4"></div>
+</div>
 {% endblock content %}
