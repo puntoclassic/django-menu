@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UsernameField, UserCreationForm, PasswordResetForm, UserChangeForm, AuthenticationForm
 from django import forms
 from .models import User
-from allauth.account.forms import LoginForm
+from allauth.account.forms import LoginForm, SignupForm
 
 
 class CustomLoginForm(LoginForm):
@@ -14,9 +14,8 @@ class CustomLoginForm(LoginForm):
             attrs={"autocomplete": "current-password", "class": 'form-control'}),
     )
 
-class CustomSignInForm(UserCreationForm):
-    error_css_class = "is-invalid"
-    username = UsernameField(widget=forms.TextInput(
+class CustomSignInForm(SignupForm):
+    email =forms.EmailField(widget=forms.TextInput(
         attrs={"autofocus": True, "class": 'form-control'}))
     password1 = forms.CharField(
         label="Password",
@@ -39,13 +38,12 @@ class CustomSignInForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = user.username
+    def save(self, request):
+        user = super().save(request)
+        user.email = self.cleaned_data["email"]
+        user.username = user.email
         user.first_name = self.cleaned_data["first_name"]
-        user.last_name = self.cleaned_data["last_name"]
-        if commit:
-            user.save()
+        user.last_name = self.cleaned_data["last_name"]        
         return user
 
 

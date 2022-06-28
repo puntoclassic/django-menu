@@ -14,15 +14,14 @@ from .models import User
 '''
 class CustomLoginView(LoginView):
     form_class = CustomLoginForm
-    redirect_url = reverse_lazy('account')'''
+    redirect_url = reverse_lazy('account')
 
 class CustomSignInView(CreateView):
     template_name = "profilo/signin.html"
     form_class = CustomSignInForm
-    success_url = reverse_lazy('account_login') 
+    success_url = reverse_lazy('account_login') '''
 
-class CustomLogoutView(LogoutView):
-    template_name = "profilo/logout.html"
+
 
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordRecoveryForm
@@ -78,11 +77,3 @@ class AccountInformazioniProfiloEdit(UpdateView):
     def get_success_url(self) -> str:
         return reverse('le-mie-informazioni-edit', kwargs={'pk': self.object.id})
 
-
-class AccountCambiaPassword(PasswordChangeView):
-    template_name = "profilo/cambia-password/cambia-password-1.html"
-    success_url = reverse_lazy("cambia-password-done")
-
-
-class AccountCambiaPasswordDone(TemplateView):
-    template_name = "profilo/cambia-password/cambia-password-2.html"

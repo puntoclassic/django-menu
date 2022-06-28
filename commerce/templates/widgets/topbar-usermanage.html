@@ -1,6 +1,6 @@
 {% if user.is_authenticated %}
     <a class="btn btn-link text-light" href="{% url 'profilo' %}"><i class="bi bi-globe2 pe-2"></i>Profilo</a>
-    <a class="btn btn-link text-light" href="{% url 'logout' %}"><i class="bi-box-arrow-right pe-2"></i>Esci</a>
+    <a class="btn btn-link text-light" href="{% url 'account_logout' %}"><i class="bi-box-arrow-right pe-2"></i>Esci</a>
 {% else %}
     {% include "widgets/login-button.html" %}
 {% endif %}
