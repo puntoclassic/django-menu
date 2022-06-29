@@ -12,11 +12,12 @@ from django.template.loader import get_template
 import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
+from django.core.mail import send_mail
 
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
 from impostazioni.models import GeneraliModel
-from shop.settings import env
+from shop.settings import EMAIL_HOST_USER, env
 
 from .models import Category, Food, Order, OrderDetail, OrderStatus
 from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
@@ -279,13 +280,21 @@ class CheckoutConfermaView(UserPassesTestMixin,TemplateView):
     def get_context_data(self, **kwargs):
         context_data  =super().get_context_data(**kwargs)
         context_data["order_id"] = kwargs.get("id")
+        order = Order.objects.filter(id=kwargs.get("id")).first()
 
-        message = get_template('account/email/email_order_created.html').render({
-             "base_info": GeneraliModel.get_solo(),
-            "order_id":kwargs.get("id")
+        '''message = get_template('email/email_order_created.html').render({
+            "base_info": GeneraliModel.get_solo(),
+            "order":order
         })
+
  
-        #send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)
+        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)'''
+
+        message = get_template('email/email_order_paid.html').render({
+            "base_info": GeneraliModel.get_solo(),
+            "order":order
+        }) 
+        send_mail("Il tuo ordine è stato pagato",message,from_email=EMAIL_HOST_USER,recipient_list=[order.customer.email],html_message=message)
         return context_data
 
 class CheckoutPagaView(UserPassesTestMixin,TemplateView):
@@ -412,5 +421,12 @@ def stripe_webhook(request):
         metadata = event["data"]["object"]['metadata']   
         order = Order.objects.filter(id=metadata["order_sku"]).first()
         order.payed = True
-        order.save()    
+        order.save()   
+
+        message = get_template('email/email_order_paid.html').render({
+            "base_info": GeneraliModel.get_solo(),
+            "order":order
+        }) 
+        send_mail("Il tuo ordine è stato pagato",message,from_email=EMAIL_HOST_USER,recipient_list=[order.customer.email],html_message=message)
+
     return HttpResponse(status=200)
