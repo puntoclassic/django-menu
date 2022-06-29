@@ -15,9 +15,6 @@ body {
     font-family: 'Smooch', cursive;
 }
 
-.ingredients {
-    font-family: 'Smooch Sans', sans-serif;
-}
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
@@ -71,5 +68,5 @@ body {
 }
 
 .breadcrumbs {
-    background-color: $primary !important;
+    background-color: $primary  !important;
 }

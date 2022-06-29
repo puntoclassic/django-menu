@@ -11919,10 +11919,6 @@ body {
   font-family: "Smooch", cursive;
 }
 
-.ingredients {
-  font-family: "Smooch Sans", sans-serif;
-}
-
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: var(--bs-nav-pills-link-active-color);

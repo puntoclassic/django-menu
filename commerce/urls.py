@@ -27,5 +27,5 @@ urlpatterns = [
     path('checkout/ordine/<int:id>/paga', CheckoutPagaView.as_view() ,name="checkout-paga"),
     path('checkout/ordine/<int:id>/pagato', CheckoutPagatoView.as_view() ,name="checkout-pagato"),
     path('webhook/', stripe_webhook), 
-
+    path('cerca',GlobalSearchResultView.as_view(),name='search')
 ]

@@ -4,5 +4,6 @@
     <a class="btn btn-link text-light text-decoration-none"
        href="{% url 'account_logout' %}"><i class="bi-box-arrow-right pe-2"></i>Esci</a>
 {% else %}
-    {% include "widgets/login-button.html" %}
+    <a class="btn btn-link text-light  text-decoration-none"
+       href="{% url 'account_login' %}"><i class="bi bi-person pe-2"></i>Accedi</a>
 {% endif %}

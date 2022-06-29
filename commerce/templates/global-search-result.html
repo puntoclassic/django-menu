@@ -1,25 +1,24 @@
 {% extends "layouts/base.html" %}
 {% block page_title %}
-    Categoria {{ category.name }}
+    Risultati di ricerca
 {% endblock page_title %}
 {% block header %}
     <div class="g-0 row">{% include "widgets/header.html" %}</div>
 {% endblock header %}
 {% block nav %}
-    <div class="g-0 row">
-        <div class="col-lg-12 d-flex justify-content-center align-items-center">
-            {% include "widgets/category-pills.html" %}
-        </div>
-    </div>
-    <hr class="mt-4 ms-4 me-4 m-0" />
 {% endblock nav %}
 {% block content %}
     <div class="row g-0 p-4 flex-grow-1">
         <div class="col-lg-12">
             <div class="row g-0">
-                {% for food in category.foods.all %}
-                    {% include "widgets/food-item.html" with item=food %}
-                {% endfor %}
+                <b>Risultati di ricerca per "{{ search }}"</b>
+                {% if object_list %}
+                    {% for food in object_list %}
+                        {% include "widgets/food-item-with-category.html" with item=food %}
+                    {% endfor %}
+                {% else %}
+                    <p>Nessuna corrispondenza trovata per "{{ search }}"</p>
+                {% endif %}
             </div>
             <div class="row g-0"></div>
             <div class="row g-0"></div>

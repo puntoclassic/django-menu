@@ -1,24 +1,24 @@
 
 from decimal import Decimal
-from pipes import Template
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.mail import BadHeaderError, send_mail
-from django.template.loader import render_to_string, get_template
-from django.contrib.auth.mixins import LoginRequiredMixin
-from requests import request
+from django.views.generic.list import ListView
+from django.contrib.auth.mixins import UserPassesTestMixin
+
+from django.template.loader import get_template
 import stripe
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
 from impostazioni.models import GeneraliModel
-from shop.settings import EMAIL_FROM_NAME, EMAIL_HOST_USER, env
+from shop.settings import env
 
-from .models import Category, Order, OrderDetail, OrderStatus
+from .models import Category, Food, Order, OrderDetail, OrderStatus
 from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
 
 # Create your views here.
@@ -370,9 +370,22 @@ class CheckoutPagatoView(UserPassesTestMixin,TemplateView):
         else:
             return False  
 
+class GlobalSearchResultView(ListView):
+    template_name: str = "global-search-result.html"
+    queryset = Food.objects.all()
+    model = Food
 
+    def get_queryset(self) :
+        search = self.request.GET.get("search","")
+        queryset = super().get_queryset()
+        if len(search)>0:
+            queryset = queryset.filter(Q(name__icontains=search) | Q(ingredients__icontains=search) | Q(default_category__name__icontains=search))  
+        return queryset
 
-from django.views.decorators.csrf import csrf_exempt
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data["search"] = self.request.GET.get("search","")
+        return context_data
 
 @csrf_exempt
 def stripe_webhook(request):
