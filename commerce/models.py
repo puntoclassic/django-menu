@@ -80,3 +80,10 @@ class OrderDetail(models.Model):
     name = models.CharField(max_length=255)
     quantity = models.IntegerField(blank=False,default=1)
     price =  models.DecimalField(verbose_name='Prezzo', max_digits=4, decimal_places=2,blank=True,null=False)
+    
+    def __str__(self):
+        return f"{str(self.order.id)} - {self.name}"
+
+    class Meta:
+        verbose_name = "dettaglio ordine"
+        verbose_name_plural = "dettagli ordini"

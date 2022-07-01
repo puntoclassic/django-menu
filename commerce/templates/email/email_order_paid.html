@@ -25,13 +25,6 @@
                     <td>{{ item.quantity }}</td>
                 </tr>
             {% endfor %}
-            {% if order.shippingRequired %}
-                <tr>
-                    <td>Spese di consegna</td>
-                    <td>2 €</td>
-                    <td>1</td>
-                </tr>
-            {% endif %}
         </tbody>
     </table>
 {% endblock content %}

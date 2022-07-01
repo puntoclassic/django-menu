@@ -282,19 +282,14 @@ class CheckoutConfermaView(UserPassesTestMixin,TemplateView):
         context_data["order_id"] = kwargs.get("id")
         order = Order.objects.filter(id=kwargs.get("id")).first()
 
-        '''message = get_template('email/email_order_created.html').render({
+        message = get_template('email/email_order_created.html').render({
             "base_info": GeneraliModel.get_solo(),
             "order":order
         })
-
  
-        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)'''
+        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)
 
-        message = get_template('email/email_order_paid.html').render({
-            "base_info": GeneraliModel.get_solo(),
-            "order":order
-        }) 
-        send_mail("Il tuo ordine è stato pagato",message,from_email=EMAIL_HOST_USER,recipient_list=[order.customer.email],html_message=message)
+       
         return context_data
 
 class CheckoutPagaView(UserPassesTestMixin,TemplateView):
