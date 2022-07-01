@@ -5,3 +5,4 @@ db.sqlite3
 specifiche.txt
 /public/assets
 /myenv
+django.log
