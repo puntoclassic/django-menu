@@ -77,3 +77,10 @@
 {% block header %}
     <div class="g-0 row">{% include "widgets/header.html" %}</div>
 {% endblock header %}
+{% block topbar-left %}
+    {% include "widgets/home-button.html" %}
+{% endblock topbar-left %}
+{% block topbar-right %}
+    {% include "widgets/cart-button.html" %}
+    {% include "widgets/account-manage.html" %}
+{% endblock topbar-right %}
