@@ -1,5 +1,5 @@
 {% load commerce_filters %}
-<li class="nav-item">
+<li class="nav-item text-center my-1 md-my-0 lg-my-0">
     {% if request.path|endswith:item.slug %}
         <a class="nav-link active me-2"
            href="{% url 'category-show' slug=item.slug %}">{{ item.name }}</a>

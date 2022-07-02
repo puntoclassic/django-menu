@@ -1,6 +1,6 @@
-<div className="row g-0">
-    <div className="col-lg-12 d-flex justify-content-center align-items-center">
-        <ul class="nav nav-pills">
+<div class="row g-0">
+    <div class="col-lg-12 d-flex justify-content-center align-items-center">
+        <ul class="nav nav-pills  flex-column flex-md-row">
             {% for category in categories %}
                 {% include "widgets/category-pill.html" with item=category %}
             {% endfor %}
