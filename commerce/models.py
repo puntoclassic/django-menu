@@ -21,6 +21,10 @@ class Category(models.Model):
         self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
 
+    @property
+    def image_url(self):
+        return self.image
+
     class Meta:
         verbose_name = "categoria"
         verbose_name_plural = "categorie"

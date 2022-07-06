@@ -60,7 +60,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',   
     'rest_framework', 
     'rest_auth',
-    'webapi' 
+    'webapi' ,
+    "graphene_django"
+
 
 ]
 
@@ -230,3 +232,6 @@ LOGGING = {
     },
 }'''
 
+GRAPHENE = {
+    "SCHEMA": "webapi.schema.schema"
+}
