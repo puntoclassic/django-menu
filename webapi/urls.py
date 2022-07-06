@@ -1,7 +1,7 @@
 
 from rest_framework import routers
 from django.urls import path, include
-from webapi.views import RegisterView, UserView
+from webapi.views import LoginView, RegisterView, UserView
 from webapi.viewsets import CategoryViewSet, FoodViewSet 
    
 
@@ -14,5 +14,7 @@ router.register(r'foods', FoodViewSet)
 urlpatterns = [
     path('',include(router.urls)),  
     path('register/', RegisterView.as_view(), name='auth_register'),
-    path('user/',UserView.as_view())
+    path('user/',UserView.as_view()),
+    path('user/login/',LoginView.as_view())
+
 ]

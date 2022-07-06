@@ -199,6 +199,7 @@ ACCOUNT_FORMS = {
     'signup': 'profilo.forms.CustomSignInForm',    
 }
 
+'''
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -227,4 +228,5 @@ LOGGING = {
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
-}
+}'''
+
