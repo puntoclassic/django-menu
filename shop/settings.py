@@ -57,24 +57,26 @@ INSTALLED_APPS = [
     'solo',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',   
-    'rest_framework', 
-    'rest_auth',
-    'webapi' ,
-    "graphene_django"
-
-
+    'allauth.socialaccount', 
+    "graphene_django",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsPostCsrfMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 ROOT_URLCONF = 'shop.urls'
 
@@ -233,5 +235,5 @@ LOGGING = {
 }'''
 
 GRAPHENE = {
-    "SCHEMA": "webapi.schema.schema"
+    "SCHEMA": "shop.schema.schema"
 }

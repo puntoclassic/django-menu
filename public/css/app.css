@@ -11919,6 +11919,10 @@ body {
   font-family: "Smooch", cursive;
 }
 
+.ingredients {
+  font-family: "Smooch Sans", sans-serif;
+}
+
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: var(--bs-nav-pills-link-active-color);
@@ -11962,9 +11966,5 @@ body {
 }
 
 .topbar-style {
-  background-color: #58151c !important;
-}
-
-.breadcrumbs {
-  background-color: #842029 !important;
+  background-color: #58151c;
 }/*# sourceMappingURL=app.css.map */
