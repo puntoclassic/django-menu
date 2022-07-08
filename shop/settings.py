@@ -60,6 +60,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount', 
     "graphene_django",
     'corsheaders',
+    'rest_framework', 
+    'rest_auth',
+    'webapi' ,
 ]
 
 MIDDLEWARE = [

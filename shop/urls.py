@@ -14,5 +14,7 @@ urlpatterns = [
     path('', include('commerce.urls')),
     path('auth/', include('profilo.urls')),
     path('auth/', include('allauth.urls')),
+    path('webapi/', include('rest_framework.urls')),
+    path('webapi/', include('webapi.urls')),
     path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]
