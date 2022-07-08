@@ -31,21 +31,17 @@ class RegisterView(generics.CreateAPIView):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        user = serializer.save()
+        complete_signup(self.request._request, user,
+                        allauth_settings.EMAIL_VERIFICATION,
+                        None)
         headers = self.get_success_headers(serializer.data)
 
         return Response(
             {
                 "status":"User created"              
             }
-        , status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        user = serializer.save()
-        complete_signup(self.request._request, user,
-                        allauth_settings.EMAIL_VERIFICATION,
-                        None)
-        return user
+        , status=status.HTTP_201_CREATED, headers=headers)   
 
 
 class UserView(APIView):

@@ -57,8 +57,7 @@ INSTALLED_APPS = [
     'solo',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount', 
-    "graphene_django",
+    'allauth.socialaccount',    
     'corsheaders',
     'rest_framework', 
     'rest_auth',
@@ -237,6 +236,3 @@ LOGGING = {
     },
 }'''
 
-GRAPHENE = {
-    "SCHEMA": "shop.schema.schema"
-}

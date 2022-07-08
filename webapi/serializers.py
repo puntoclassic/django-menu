@@ -15,7 +15,16 @@ from rest_framework import mixins
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id','name','image']
 
+
+class FoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Food        
+        fields = ['id','name','ingredients','default_category','price']
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
