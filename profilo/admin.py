@@ -4,6 +4,7 @@ from .models import *
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from copy import deepcopy
+from allauth.account.models import EmailAddress 
 
 # Register your models here.
 @admin.register(User)
@@ -11,8 +12,12 @@ class CustomUserAdmin(UserAdmin):
     model = User
     form = CustomUserChangeForm
     list_display = ('first_name', 'last_name',
-                    'email')
+                    'email','is_verified')
     list_display_links = ('first_name','last_name','email')   
+
+    @admin.display(description="Email verificata",boolean=True)
+    def is_verified(self,obj):
+        return EmailAddress.objects.filter(email=obj.email).first().verified
 
     
 
