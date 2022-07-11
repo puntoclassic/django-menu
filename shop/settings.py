@@ -57,11 +57,11 @@ INSTALLED_APPS = [
     'solo',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount',    
     'corsheaders',
     'rest_framework', 
     'rest_auth',
     'webapi' ,
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +79,6 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-
 ROOT_URLCONF = 'shop.urls'
 
 TEMPLATES = [
@@ -93,7 +92,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'commerce.context_processor.base_categories',
                 'impostazioni.context_processor.base_info'
             ],
         },
@@ -189,7 +187,7 @@ ACCOUNT_LOGIN_ON_PASSWORD_RESET=False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',        
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
@@ -200,10 +198,6 @@ STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
 STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
 
-ACCOUNT_FORMS = {
-    'login': 'allauth.account.forms.LoginForm',
-    'signup': 'profilo.forms.CustomSignInForm',    
-}
 
 '''
 LOGGING = {

@@ -1,19 +1,15 @@
 from commerce.models import Food
 from profilo.models import User
-from rest_framework import routers, serializers, viewsets
-from django.urls import path, include
+from rest_framework import  serializers
+
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
-from allauth.account.utils import complete_signup
-from allauth.account import app_settings as allauth_settings
-from rest_framework.response import Response
-from rest_framework import status, permissions, authentication
+from allauth.account.models import EmailAddress 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from commerce.models import Category,Food
-from rest_framework import mixins
-from rest_framework.views import APIView
-from rest_framework.decorators import action
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,3 +58,28 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()  
 
         return user
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        email = EmailAddress.objects.filter(email=user.email).first()
+        token['emailVerified'] = email.verified   
+
+        print(token);    
+
+        return token
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        account = EmailAddress.objects.filter(email=user.email).first()
+
+        # Add custom claims
+        token['verified'] = account.verified
+        # ...
+
+        return token

@@ -6,3 +6,5 @@ specifiche.txt
 /public/assets
 /myenv
 django.log
+*node_modules
+/frontend/build

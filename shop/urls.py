@@ -10,4 +10,5 @@ urlpatterns = [
     path('auth/', include('allauth.urls')),
     path('api/', include('rest_framework.urls')),
     path('api/', include('webapi.urls')),
+    
 ]
