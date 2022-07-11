@@ -59,13 +59,16 @@ body {
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-template-rows: repeat(auto-fit, minmax(0px, 250px));
-
-    column-gap: 15px;
-    row-gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 300px));
+    grid-template-rows: repeat(auto-fit, minmax(200px, 200px));
+    justify-content: center;
 }
 
 .topbar-style {
     background-color: #58151c;
+}
+
+.category-title {
+    background-color: #58151c;
+
 }

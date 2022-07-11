@@ -3,4 +3,4 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
-   pass
+   email_verified = models.BooleanField(blank=True,default=False,verbose_name='Email verificata')

@@ -1,7 +1,6 @@
 from commerce.models import Food
 from profilo.models import User
 from rest_framework import  serializers
-from allauth.account.models import EmailAddress 
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -62,7 +61,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user: User):
         token = super().get_token(user)
-        account = EmailAddress.objects.filter(email=user.email).first()
 
-        token['verified'] = account.verified
+        token['verified'] = user.email_verified
         return token
