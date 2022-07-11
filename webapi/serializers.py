@@ -4,7 +4,6 @@ from rest_framework import  serializers
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from allauth.account.models import EmailAddress 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from commerce.models import Category,Food
@@ -60,26 +59,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        email = EmailAddress.objects.filter(email=user.email).first()
-        token['emailVerified'] = email.verified   
-
-        print(token);    
-
-        return token
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
-    def get_token(cls, user):
+    def get_token(cls, user: User):
         token = super().get_token(user)
-
-        account = EmailAddress.objects.filter(email=user.email).first()
-
-        # Add custom claims
-        token['verified'] = account.verified
-        # ...
-
+        token['verified'] = user.emailVerified
         return token

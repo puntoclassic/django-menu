@@ -15,12 +15,10 @@ from django.db.models import Q
 from django.core.mail import send_mail
 
 
-from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
 from impostazioni.models import GeneraliModel
 from shop.settings import EMAIL_HOST_USER, env
 
-from .models import Category, Food, Order, OrderDetail, OrderStatus
-from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
+from .models import Order
 
 # Create your views here.
 stripe.api_key = env("STRIPE_TEST_SECRET_KEY")
