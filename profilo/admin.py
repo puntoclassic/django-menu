@@ -1,4 +1,3 @@
-from operator import index
 from django.contrib import admin
 from .forms import *
 from .models import *
@@ -13,7 +12,12 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('first_name', 'last_name',
                     'email', 'is_staff',)
     list_display_links = ('first_name','last_name','email')  
-    
-    
+   
+
+    def get_fieldsets(self, request, obj):
+        fieldsets = super().get_fieldsets(request, obj)
+        
+
+        return  fieldsets
 
    
