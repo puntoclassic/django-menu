@@ -5,10 +5,13 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.views import APIView
-from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.views import TokenObtainPairView
+
+from rest_framework.permissions import AllowAny
+from allauth.account.utils import complete_signup
+from allauth.account import app_settings as allauth_settings
+from rest_framework.response import Response
+from rest_framework import status
 
 from webapi.serializers import MyTokenObtainPairSerializer, RegisterSerializer
 # Create your views here.
@@ -32,7 +35,9 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         
-        #TODO: send activation code
+        complete_signup(self.request._request, user,
+                        allauth_settings.EMAIL_VERIFICATION,
+                        None)
         headers = self.get_success_headers(serializer.data)
 
         return Response(
