@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.contrib.auth.forms import UserChangeForm
 from django import forms
 from .models import User
@@ -8,7 +7,4 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = "__all__"
-        
-    
-        
+        fields = "__all__" 
