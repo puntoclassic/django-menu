@@ -8,23 +8,23 @@
     </p>
     <p>Totale da pagare alla consegna: {{ order.subTotal }} €</p>
     <b>Cosa c'e nel tuo ordine</b>
-</br>
-<table style="width:100%">
-    <thead>
-        <tr>
-            <td style="font-weight:bold">Nome</td>
-            <td style="font-weight:bold">Prezzo</td>
-            <td style="font-weight:bold">Quantità</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in order.order_details.all %}
+    <br />
+    <table style="width:100%">
+        <thead>
             <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.price }} €</td>
-                <td>{{ item.quantity }}</td>
+                <td style="font-weight:bold">Nome</td>
+                <td style="font-weight:bold">Prezzo</td>
+                <td style="font-weight:bold">Quantità</td>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for item in order.order_details.all %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price }} €</td>
+                    <td>{{ item.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock content %}

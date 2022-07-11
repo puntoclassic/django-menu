@@ -1,0 +1,5 @@
+<a class="btn btn-link text-light text-decoration-none"
+   href="{% url 'show-cart' %}"><i class="bi bi-bag pe-2"></i>Carrello<span class="badge d-none d-md-none d-xxl-inline-block rounded-pill bg-danger">
+{{ request.session.cart.items.keys|length }}
+<span class="visually-hidden">elementi nel carrello</span>
+</span></a>

@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% block page_title %}
+    Verifica il tuo indirizzo email
+{% endblock page_title %}
+{% block content %}
+    <div class="row g-0 ms-4 me-4">
+        {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    <span>{{ message }}</span>
+                </br>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+<div class="row ms-4 me-4 g-0">
+    <div class="col-12">
+        <p>
+            Ciao, il tuo accesso è andato a buon fine. Per confermare che sei tu ti abbiamo inviato un email con un link per confermare la tua identità.
+        </p>
+        <a href="{% url 'account_email' %}">Non ho ricevuto la mail, inviamene un altra</a>
+    </div>
+</div>
+{% endblock content %}
+{% block topbar-left %}
+    {% include "widgets/home-button.html" %}
+{% endblock topbar-left %}
+{% block topbar-right %}
+    {% include "widgets/cart-button.html" %}
+    {% include "widgets/account-manage.html" %}
+{% endblock topbar-right %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}
