@@ -7,6 +7,8 @@ from .models import User
 
 class CustomUserChangeForm(UserChangeForm):
     email_verified = forms.BooleanField(label="Email verificata",required=False)
+    activation_code = forms.CharField(label="Codice di attivazione",required=False)
+
 
     class Meta:
         model = User

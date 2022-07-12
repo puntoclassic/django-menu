@@ -16,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
 
     def get_fieldsets(self, request, obj):
         fieldsets = deepcopy(super().get_fieldsets(request, obj))
-        fieldsets[1][1]["fields"] += ("email_verified",)
+        fieldsets[1][1]["fields"] += ("email_verified",'activation_code',)
         return fieldsets 
 
    

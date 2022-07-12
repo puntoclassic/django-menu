@@ -1,6 +1,6 @@
 from rest_framework import routers
 from django.urls import path, include
-from webapi.views import MyTokenObtainPairView, RegisterView
+from webapi.views import AccountActivateByCodeView, AccountResendActivationCodeView, MyTokenObtainPairView, RegisterView
 from webapi.viewsets import CategoryViewSet, FoodViewSet 
 
 from rest_framework_simplejwt.views import (
@@ -15,9 +15,10 @@ router.register(r'foods', FoodViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),  
-    path('user/signin/', RegisterView.as_view(), name='auth_register'),
-    path('user/login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('user/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('user/login/verify/', TokenVerifyView.as_view(), name='token_verify'),
-
+    path('signin/', RegisterView.as_view(), name='auth_register'),
+    path('login/getToken/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/refreshToken/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('login/verifyToken/', TokenVerifyView.as_view(), name='token_verify'),
+    path('login/verifyAccount/', AccountActivateByCodeView.as_view(), name='verify_account_by_code'),
+    path('login/resendActivationCode/', AccountResendActivationCodeView.as_view(), name='resend_activation_code'),
 ]

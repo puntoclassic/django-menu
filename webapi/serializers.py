@@ -7,7 +7,8 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from commerce.models import Category,Food
-
+import random
+import string
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -45,17 +46,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        activation_code = str(random.randrange(100000,999999))
+
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
+            activation_code=activation_code,
+            email_verified=False
         )
         
         user.set_password(validated_data['password'])
-        user.save()  
+        user.save()        
 
         return user
+
+class AccountActivationByCodeSerializer(serializers.Serializer):
+    code = serializers.CharField(required=True)      
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
