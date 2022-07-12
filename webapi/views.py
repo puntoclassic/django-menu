@@ -1,4 +1,5 @@
 
+import email
 from profilo.models import User
 
 from rest_framework import generics
@@ -10,12 +11,10 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 
 from rest_framework.permissions import AllowAny
-from allauth.account.utils import complete_signup
-from allauth.account import app_settings as allauth_settings
 from rest_framework.response import Response
 from rest_framework import status
 from shop.settings import EMAIL_HOST_USER
-
+from allauth.account.models import EmailAddress
 from impostazioni.models import GeneraliModel
 
 from webapi.serializers import AccountActivationByCodeSerializer, MyTokenObtainPairSerializer, RegisterSerializer
@@ -65,8 +64,9 @@ class AccountActivateByCodeView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)   
 
         if str(request.data["code"])==request.user.activation_code:
-            request.user.email_verified = True
-            request.user.save()
+            emailAddress = EmailAddress.objects.filter(email=request.user.email).first()
+            emailAddress.verified = True
+            emailAddress.save()
             return Response({
             "status":"Account activated"
         })

@@ -1,1 +1,36 @@
-<p>API Server works</p>
+{% extends "layouts/base.html" %}
+{% block page_title %}
+    Home
+{% endblock page_title %}
+{% block content %}
+    <div class="row g-0 flex-grow-1 p-4">
+        <div class="category-grid">
+            {% for category in categories %}
+                <a href="{% url 'category-show' slug=category.slug %}">
+                    <div class="card bg-dark text-white h-100">
+                        {% if category.image %}
+                            <img height="100%"
+                                 alt="Immagine per {{ category.name }}"
+                                 width="100%"
+                                 class="card-img opacity-75"
+                                 src="{{ category.image }}"/>
+                        {% endif %}
+                        <div class="card-img-overlay">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}
+{% block topbar-left %}
+    {% include "widgets/global-search-form.html" %}
+{% endblock topbar-left %}
+{% block topbar-right %}
+    {% include "widgets/cart-button.html" %}
+    {% include "widgets/account-manage.html" %}
+{% endblock topbar-right %}

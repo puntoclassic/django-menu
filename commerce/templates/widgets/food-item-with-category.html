@@ -1,0 +1,25 @@
+<div class="row g-0 my-2">
+    <div class="col-lg-8">
+        <div class="g-0 row">
+            <div class="col-lg-6">
+                <a href="{% url 'category-show' slug=item.default_category.slug %}"><span class="badge bg-secondary">{{ item.default_category.name }}</span></a>
+            </div>
+            <div class="col-lg-12 fs-5">{{ item.name }}</div>
+            {% if item.ingredients %}
+                {% include "widgets/food-ingredients.html" with ingredients=item.ingredients %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4 d-flex justify-content-end align-items-center">
+        {{ item.price }} €
+        <form method="post" class="m-0" action="{% url 'add-to-cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="food_id" value="{{ item.id }}" />
+            <input type="hidden" name="food_name" value="{{ item.name }}" />
+            <input type="hidden" name="food_price" value="{{ item.price }}" />
+            <button type="submit" class="btn btn-info ms-3">
+                <i class="bi bi-cart-plus"></i>
+            </button>
+        </form>
+    </div>
+</div>

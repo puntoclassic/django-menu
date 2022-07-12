@@ -6,7 +6,8 @@ from commerce.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('commerce.urls')),
-    path('auth/', include('profilo.urls')),
+    path('account/', include('profilo.urls')),
+    path('account/', include('allauth.urls')),
     path('api/', include('rest_framework.urls')),
     path('api/', include('webapi.urls')),
     

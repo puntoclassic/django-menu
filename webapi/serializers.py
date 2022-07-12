@@ -5,10 +5,10 @@ from rest_framework import  serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from allauth.account.models import EmailAddress
 
 from commerce.models import Category,Food
 import random
-import string
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -70,5 +70,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user: User):
         token = super().get_token(user)
 
-        token['verified'] = user.email_verified
+        emailAddress = EmailAddress.objects.filter(email=user.email).first()
+
+        token['verified'] = emailAddress.verified
         return token
