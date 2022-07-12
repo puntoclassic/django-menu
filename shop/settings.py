@@ -198,6 +198,10 @@ STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
 STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
 
+ACCOUNT_FORMS = {
+    
+    'signup': 'profilo.forms.CustomSignInForm',    
+}
 
 '''
 LOGGING = {
@@ -228,5 +232,5 @@ LOGGING = {
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
-}'''
-
+}
+'''
