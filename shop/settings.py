@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import environ
 import os
@@ -37,7 +38,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "0.0.0.0",
     "127.0.0.1",
-    "localhost"
+    "localhost",
+    "192.168.1.27"
 ]
 
 AUTH_USER_MODEL = 'profilo.User'
@@ -56,9 +58,9 @@ INSTALLED_APPS = [
     'profilo',
     'solo',
     'corsheaders',
-    'rest_framework',     
-    'webapi' ,
-    'rest_framework_simplejwt', 
+    'rest_framework',
+    'webapi',
+    'rest_framework_simplejwt',
     'allauth',
     'allauth.account',
 ]
@@ -160,7 +162,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'profilo'
-AUTHENTICATION_BACKENDS = [   
+AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -175,15 +177,15 @@ EMAIL_USE_TLS = False
 EMAIL_FROM_NAME = env('MAIL_FROM_NAME')
 LOGIN_URL = "/account/login"
 
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS=False
-ACCOUNT_AUTHENTICATION_METHOD="email"
-ACCOUNT_USERNAME_REQUIRED=False
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_CONFIRM_EMAIL_ON_GET=True
-ACCOUNT_LOGOUT_ON_GET=True
-ACCOUNT_MAX_EMAIL_ADDRESSES=1
-ACCOUNT_LOGIN_ON_PASSWORD_RESET=False
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_MAX_EMAIL_ADDRESSES = 1
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -192,15 +194,20 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
-} 
+}
 
 STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
 STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
 
 ACCOUNT_FORMS = {
-    
-    'signup': 'profilo.forms.CustomSignInForm',    
+
+    'signup': 'profilo.forms.CustomSignInForm',
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 '''
