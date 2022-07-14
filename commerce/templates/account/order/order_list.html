@@ -1,0 +1,53 @@
+{% extends "layouts/base.html" %}
+{% load commerce_filters %}
+{% block page_title %}
+    I miei ordini
+{% endblock page_title %}
+{% block topbar-left %}
+    {% include "widgets/home-button.html" %}
+{% endblock topbar-left %}
+{% block topbar-right %}
+    {% include "widgets/cart-button.html" %}
+    {% include "widgets/account-manage.html" %}
+{% endblock topbar-right %}
+{% block content %}
+    <div class="row g-0 flex-grow-1 p-4">
+        <div class="col-lg-12">
+            <div class="row g-0">
+                <h4>I mei ordini</h4>
+            </div>
+            <div class="row g-0">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <th>#</th>
+                                <th>Stato</th>
+                                <th>Totale</th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                {% for row in object_list %}
+                                    <tr>
+                                        <td>{{ row.id }}</td>
+                                        <td>{{ row.order_status.description }}</td>
+                                        <td>€ {{ row.subtotal }}</td>
+                                        <td>
+                                            <a class="text-decoration-none"
+                                               href="{% url 'profilo-ordini-detail' pk=row.id %}">
+                                                <i class="bi bi-three-dots"></i> Dettaglio
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

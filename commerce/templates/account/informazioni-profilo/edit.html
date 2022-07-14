@@ -1,4 +1,5 @@
 {% extends "layouts/base.html" %}
+{% load commerce_filters %}
 {% block page_title %}
     Le mie informazioni
 {% endblock page_title %}
@@ -7,9 +8,11 @@
         {% if messages %}
             <div class="row mb-4">
                 <div class="col-12">
-                    <div class="alert alert-success" role="alert">
-                        {% for message in messages %}{{ message }}{% endfor %}
-                    </div>
+                    {% for message in messages %}
+                        {% if message.tags|contains:'informazioni-profilo'  %}
+                            <div class="alert alert-success" role="alert">{{ message }}</div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         {% endif %}

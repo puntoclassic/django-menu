@@ -42,7 +42,7 @@ ALLOWED_HOSTS = [
     "192.168.1.27"
 ]
 
-AUTH_USER_MODEL = 'profilo.User'
+AUTH_USER_MODEL = 'commerce.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,8 +54,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_object_actions',
     'commerce',
-    'impostazioni',
-    'profilo',
     'solo',
     'corsheaders',
     'rest_framework',
@@ -93,8 +91,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'impostazioni.context_processor.base_info',
-                'commerce.context_processor.base_categories'
+                'commerce.context_processor.base_info'
+               
             ],
         },
     },

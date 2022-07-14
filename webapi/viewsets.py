@@ -1,9 +1,8 @@
 from commerce.models import Food
-from profilo.models import User
 from rest_framework import serializers, viewsets
 
 from rest_framework.response import Response
-from commerce.models import Category,Food
+from commerce.models import Category,Food, User
 
 from rest_framework.decorators import action
 

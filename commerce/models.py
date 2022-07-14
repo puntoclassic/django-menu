@@ -1,11 +1,16 @@
-from hashlib import blake2b
-from tokenize import blank_re
+
 from django.db import models
 from django.utils.text import slugify
-
-from profilo.models import User
-
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
+from django.db import models
+from solo.models import SingletonModel
 # Create your models here.
+
+
+class User(AbstractUser):
+   pass
 
 
 class Category(models.Model):
@@ -63,12 +68,12 @@ class OrderStatus(models.Model):
 
 class Order(models.Model):
     customer = models.ForeignKey(User,related_name='orders',verbose_name="Cliente",blank=False,null=True,on_delete=models.SET_NULL)
-    subTotal = models.DecimalField(verbose_name='Totale', max_digits=4, decimal_places=2,blank=False,null=False)
-    shippingCosts  = models.DecimalField(verbose_name='Costi di consegna', max_digits=4, decimal_places=2,blank=True,null=False)
-    shippingAddress = models.TextField(verbose_name='Indirizzo di consegna',blank=True,null=True)
-    shippingDeliveryTime = models.TextField(verbose_name='Orario di consegna',blank=True,null=True)
-    shippingRequired = models.BooleanField(verbose_name='Consegna a domicilio',default=False)
-    orderStatus = models.ForeignKey(OrderStatus,blank=False,null=True,on_delete=models.SET_NULL,verbose_name='Stato ordine')
+    subtotal = models.DecimalField(verbose_name='Totale', max_digits=4, decimal_places=2,blank=False,null=False)
+    shipping_costs  = models.DecimalField(verbose_name='Costi di consegna', max_digits=4, decimal_places=2,blank=True,null=False)
+    shipping_address = models.TextField(verbose_name='Indirizzo di consegna',blank=True,null=True)
+    shipping_delivery_time = models.TextField(verbose_name='Orario di consegna',blank=True,null=True)
+    shipping_required = models.BooleanField(verbose_name='Consegna a domicilio',default=False)
+    order_status = models.ForeignKey(OrderStatus,blank=False,null=True,on_delete=models.SET_NULL,verbose_name='Stato ordine')
     note = models.TextField(blank=True,null=True,verbose_name='Note ordine')
     payed = models.BooleanField(verbose_name='Pagato',default=False)
     
@@ -91,3 +96,19 @@ class OrderDetail(models.Model):
     class Meta:
         verbose_name = "dettaglio ordine"
         verbose_name_plural = "dettagli ordini"
+
+
+
+
+
+
+# Create your models here.
+class GeneraliModel(SingletonModel):
+    site_name = models.CharField(max_length=255, default='Site Name',verbose_name='Nome del Sito')  
+
+
+    def __str__(self):
+        return "Impostazioni generali"
+
+    class Meta:
+        verbose_name = "impostazioni generali"

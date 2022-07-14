@@ -10903,12 +10903,6 @@ body {
   font-family: "Smooch Sans", sans-serif;
 }
 
-.nav-pills .nav-link.active,
-.nav-pills .show > .nav-link {
-  color: var(--bs-nav-pills-link-active-color);
-  background-color: var(#842029);
-}
-
 .nav-item {
   transition: background-color 500ms;
 }
@@ -10917,6 +10911,9 @@ body {
 }
 .nav-item .nav-pill-item {
   background-color: #f1f1f1;
+}
+.nav-item .nav-pill-item.active {
+  background-color: #842029;
 }
 .nav-item .nav-pill-item:hover {
   background-color: #a99f9f;

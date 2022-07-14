@@ -1,26 +1,28 @@
 
 from decimal import Decimal
+from mimetypes import init
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, DetailView, FormView
+from django.views.generic import TemplateView, DetailView, FormView, UpdateView
 from django.views.generic.list import ListView
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
 from django.template.loader import get_template
 import stripe
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core.mail import send_mail
+from django.contrib import messages
 
 
 from commerce.forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
-from impostazioni.models import GeneraliModel
 from shop.settings import EMAIL_HOST_USER, env
 
-from .models import Category, Food, Order, OrderDetail, OrderStatus
-from .forms import CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
+from .models import Category, Food, Order, OrderDetail, OrderStatus, User, GeneraliModel
+from .forms import AccountInformazioniEditForm, CheckoutConsegnaForm, CheckoutIndirizzoOrarioForm, CheckoutRiepilogoOrdineForm
+
 
 # Create your views here.
 stripe.api_key = env("STRIPE_TEST_SECRET_KEY")
@@ -38,7 +40,6 @@ class CategoriaListView(DetailView):
     model = Category
 
     def get_object(self):
-        category = get_object_or_404(Category, slug=self.kwargs['slug'])
         return self.model.objects.filter(slug=self.kwargs['slug']).first()
 
 # profile views
@@ -142,10 +143,11 @@ def cart_not_empty(self):
         return False   
 
 def get_cart(request):
+    
     return request.session.get("cart",{
                 "items":{},
                 "amount":"",
-                "tipoConsegna":"domicilio",
+                "tipo_consegna":"domicilio",
                 "orario":"",
                 "indirizzo":"",                
             })
@@ -156,18 +158,19 @@ class CheckoutConsegnaView(UserPassesTestMixin,FormView):
     cart = None
    
     def get_initial(self):
-        initial = super().get_initial()
-        self.cart = get_cart(self.request)
-        initial["tipoConsegna"] = self.cart["tipoConsegna"]
+        initial = super().get_initial()        
+        self.cart = get_cart(self.request)       
+       
+        initial["tipo_consegna"] = self.cart["tipo_consegna"] 
         return initial
 
     def form_valid(self, form):
-        self.cart["tipoConsegna"] = form.cleaned_data["tipoConsegna"]        
+        self.cart["tipo_consegna"] = form.cleaned_data["tipo_consegna"]        
         return super().form_valid(form)
     
     def get_success_url(self) -> str:     
         self.request.session["cart"] = self.cart
-        if self.cart["tipoConsegna"] == 'domicilio':            
+        if self.cart["tipo_consegna"] == 'domicilio':            
             return reverse_lazy('checkout-indirizzo-orario')
         else:
             return reverse_lazy('checkout-riepilogo')     
@@ -210,26 +213,26 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
     template_name: str = "checkout/riepilogo.html"  
 
     form_class = CheckoutRiepilogoOrdineForm
-    ordine = Order()
+    order = Order()
     
     def form_valid(self, form):
         cart = get_cart(self.request)
         note = form.cleaned_data["note"]        
-        self.ordine.customer = self.request.user
-        self.ordine.note = note
-        self.ordine.shippingAddress = cart["indirizzo"]
-        self.ordine.shippingDeliveryTime = cart["orario"]
-        self.ordine.shippingRequired = True if cart["tipoConsegna"] == "domicilio" else False
-        self.ordine.shippingCosts = 2.00 if cart["tipoConsegna"] == "domicilio" else 0.00
-        self.ordine.subTotal = Decimal(cart["amount"])+Decimal(self.ordine.shippingCosts)
-        self.ordine.orderStatus = OrderStatus.objects.filter(description="Ordine creato").first()
-        self.ordine.save()  
+        self.order.customer = self.request.user
+        self.order.note = note
+        self.order.shipping_address = cart["indirizzo"]
+        self.order.shipping_delivery_time = cart["orario"]
+        self.order.shipping_required = True if cart["tipo_consegna"] == "domicilio" else False
+        self.order.shipping_costs = 2.00 if cart["tipo_consegna"] == "domicilio" else 0.00
+        self.order.subtotal = Decimal(cart["amount"])+Decimal(self.order.shipping_costs)
+        self.order.order_status = OrderStatus.objects.filter(description="Ordine creato").first()
+        self.order.save()  
 
-        if self.ordine.shippingRequired:
+        if self.order.shipping_required:
             order_row = OrderDetail()
-            order_row.order = self.ordine
+            order_row.order = self.order
             order_row.name = "Spese di consegna"
-            order_row.price = Decimal(self.ordine.shippingCosts)
+            order_row.price = Decimal(self.order.shipping_costs)
             order_row.quantity = 1
             order_row.save()
 
@@ -237,7 +240,7 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
         items = self.request.session["cart"]["items"] 
         for item in items.values():
             order_row = OrderDetail()
-            order_row.order = self.ordine
+            order_row.order = self.order
             order_row.name = item["name"]
             order_row.price = Decimal(item["price"])
             order_row.quantity = item["quantity"]
@@ -245,52 +248,30 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
 
 
 
-        del self.request.session["cart"]        
+        del self.request.session["cart"]    
+
+        message = get_template('email/email_order_created.html').render({
+            "base_info": GeneraliModel.get_solo(),
+            "order":self.order            
+        })
+ 
+        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)   
+ 
 
         return super().form_valid(form)
 
 
     def get_success_url(self) -> str:
-        return reverse("checkout-conferma",kwargs={"id":self.ordine.id})
+        messages.add_message(self.request,messages.SUCCESS,"Il tuo ordine è stato confermato","profilo-ordini")        
+        return reverse('profilo-ordini-detail',kwargs={"pk":self.order.id})
 
     def test_func(self):
         return cart_not_empty(self)   
 
     def handle_no_permission(self) -> HttpResponseRedirect:
-        return redirect(reverse_lazy('show-cart')) 
+        return redirect(reverse_lazy('show-cart'))       
 
-class CheckoutConfermaView(UserPassesTestMixin,TemplateView):
-    template_name: str = "checkout/conferma.html"  
-
-    def test_func(self):
-        if self.request.user.is_authenticated:
-            order_id = self.kwargs["id"]  
-           
-            order = Order.objects.filter(id=order_id).first()
-            if order.customer.id==self.request.user.id:
-                return True           
-            return False
-        else:
-            return False    
-
-    def get(self, request, *args, **kwargs):
-        
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context_data  =super().get_context_data(**kwargs)
-        context_data["order_id"] = kwargs.get("id")
-        order = Order.objects.filter(id=kwargs.get("id")).first()
-
-        message = get_template('email/email_order_created.html').render({
-            "base_info": GeneraliModel.get_solo(),
-            "order":order
-        })
- 
-        send_mail("Il tuo ordine è stato creato",message,from_email=EMAIL_HOST_USER,recipient_list=[self.request.user.email],html_message=message)
-
-       
-        return context_data
+   
 
 class CheckoutPagaView(UserPassesTestMixin,TemplateView):
     template_name: str = "checkout/paga.html"
@@ -374,6 +355,11 @@ class CheckoutPagatoView(UserPassesTestMixin,TemplateView):
         else:
             return False  
 
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        messages.add_message(request,messages.SUCCESS,"Hai pagato il tuo ordine","profilo-ordini")
+        return redirect(reverse('profilo-ordini-detail',kwargs={"pk":kwargs.get("id")}))
+
+
 class GlobalSearchResultView(ListView):
     template_name: str = "global-search-result.html"
     queryset = Food.objects.all()
@@ -425,3 +411,40 @@ def stripe_webhook(request):
         send_mail("Il tuo ordine è stato pagato",message,from_email=EMAIL_HOST_USER,recipient_list=[order.customer.email],html_message=message)
 
     return HttpResponse(status=200)
+
+
+class ProfiloView(LoginRequiredMixin, TemplateView):
+    template_name = "account/index.html"
+    redirect_field_name = 'redirect_to'
+
+class AccountInformazioniProfiloView(TemplateView):
+    template_name = "account/informazioni-profilo/view.html"
+
+class AccountInformazioniProfiloEdit(UpdateView):
+    model = User
+    form_class = AccountInformazioniEditForm
+    template_name = "account/informazioni-profilo/edit.html"
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, message="Informazioni aggiornate con successo!",extra_tags="informazioni-profilo")
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse('le-mie-informazioni-edit', kwargs={'pk': self.object.id})
+
+
+class OrderListView(ListView):
+    model = Order
+    template_name = "account/order/order_list.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(customer=self.request.user)
+        return queryset
+
+class OrderDetailView(DetailView):
+    model = Order
+    template_name = "account/order/order_detail.html"    
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)

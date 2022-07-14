@@ -1,9 +1,12 @@
 import imp
-from .models import Category
+from .models import Category, GeneraliModel
 
 
 
-def base_categories(request):
+def base_info(request):
     return {
-        "categories": Category.objects.all()
+        "categories": Category.objects.all(),
+        "base_info": GeneraliModel.get_solo(),
     }
+
+
