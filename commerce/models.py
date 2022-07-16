@@ -6,11 +6,15 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from solo.models import SingletonModel
+from allauth.account.models import EmailAddress
+
 # Create your models here.
 
 
 class User(AbstractUser):
-   pass
+    
+   def verified(self):
+    return EmailAddress.objects.filter(email=self.email).first().verified
 
 
 class Category(models.Model):

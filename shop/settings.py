@@ -55,12 +55,12 @@ INSTALLED_APPS = [
     'django_object_actions',
     'commerce',
     'solo',
-    'corsheaders',
-    'rest_framework',
+    'corsheaders',   
     'webapi',
-    'rest_framework_simplejwt',
     'allauth',
     'allauth.account',
+    'ninja_jwt',
+    'ninja_extra'
 ]
 
 MIDDLEWARE = [
@@ -184,15 +184,6 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = False
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
 
 STRIPE_LIVE_SECRET_KEY = env("STRIPE_LIVE_SECRET_KEY")
 STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
