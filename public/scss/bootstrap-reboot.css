@@ -29,18 +29,18 @@
   --bs-gray-700: #495057;
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
-  --bs-primary: #842029;
-  --bs-secondary: #6c757d;
-  --bs-success: #198754;
-  --bs-info: #e9ecef;
+  --bs-primary: #730202;
+  --bs-secondary: #A63F03;
+  --bs-success: #465902;
+  --bs-info: #F29D35;
   --bs-warning: #ffc107;
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  --bs-primary-rgb: 132, 32, 41;
-  --bs-secondary-rgb: 108, 117, 125;
-  --bs-success-rgb: 25, 135, 84;
-  --bs-info-rgb: 233, 236, 239;
+  --bs-primary-rgb: 115, 2, 2;
+  --bs-secondary-rgb: 166, 63, 3;
+  --bs-success-rgb: 70, 89, 2;
+  --bs-info-rgb: 242, 157, 53;
   --bs-warning-rgb: 255, 193, 7;
   --bs-danger-rgb: 220, 53, 69;
   --bs-light-rgb: 248, 249, 250;
@@ -69,8 +69,8 @@
   --bs-border-radius-2xl: 2rem;
   --bs-border-radius-pill: 50rem;
   --bs-heading-color: ;
-  --bs-link-color: #842029;
-  --bs-link-hover-color: #6a1a21;
+  --bs-link-color: #730202;
+  --bs-link-hover-color: #5c0202;
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
 }

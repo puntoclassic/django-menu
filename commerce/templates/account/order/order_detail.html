@@ -25,6 +25,19 @@
                 {% endif %}
             </div>
             <div class="row g-0">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'profilo' %}">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'profilo-ordini-list' %}">I miei ordini</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Ordine {{ object.id }}</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="row g-0">
                 <h4>Dettagli ordine {{ object.id }}</h4>
             </div>
             <div class="row g-0">
