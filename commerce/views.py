@@ -225,7 +225,7 @@ class CheckoutRiepilogoView(UserPassesTestMixin,FormView):
         self.order.shipping_required = True if cart["tipo_consegna"] == "domicilio" else False
         self.order.shipping_costs = 2.00 if cart["tipo_consegna"] == "domicilio" else 0.00
         self.order.subtotal = Decimal(cart["amount"])+Decimal(self.order.shipping_costs)
-        self.order.order_status = OrderStatus.objects.filter(description="Ordine creato").first()
+        self.order.order_status = OrderStatus.objects.filter(description="Creato").first()
         self.order.save()  
 
         if self.order.shipping_required:
