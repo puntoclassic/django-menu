@@ -200,7 +200,7 @@ STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
 
 ACCOUNT_FORMS = {
 
-    'signup': 'profilo.forms.CustomSignInForm',
+    'signup': 'commerce.forms.CustomSignInForm',
 }
 
 

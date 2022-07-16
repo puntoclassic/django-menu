@@ -11,31 +11,32 @@
     {% include "widgets/account-manage.html" %}
 {% endblock topbar-right %}
 {% block content %}
-    <div class="row g-0 flex-grow-1 p-4">
-        <div class="col-lg-12">
-            <div class="row g-0">
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags|contains:'profilo-ordini' %}
-                            <div class="alert alert-success">
-                                <span>{{ message }}</span>
-                            </br>
+    <div class="col-lg-12 bg-secondary p-3">
+        <div class="row g-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a class="text-light" href="{% url 'profilo' %}">Profilo</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a class="text-light" href="{% url 'profilo-ordini-list' %}">I miei ordini</a>
+                    </li>
+                    <li class="breadcrumb-item active text-light" aria-current="page">Ordine {{ object.id }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="col-lg-12 flex-grow-1 p-4">
+        <div class="row g-0">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags|contains:'profilo-ordini' %}
+                        <div class="alert alert-success">
+                            <span>{{ message }}</span>
+                            <br/>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-            </div>
-            <div class="row g-0">
-                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="{% url 'profilo' %}">Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="{% url 'profilo-ordini-list' %}">I miei ordini</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Ordine {{ object.id }}</li>
-                    </ol>
-                </nav>
             </div>
             <div class="row g-0">
                 <h4>Dettagli ordine {{ object.id }}</h4>
@@ -45,7 +46,6 @@
             </div>
         </div>
     </div>
-</div>
 {% endblock content %}
 {% block header %}
     <div class="g-0 row">{% include "widgets/header.html" %}</div>

@@ -11,48 +11,48 @@
     {% include "widgets/account-manage.html" %}
 {% endblock topbar-right %}
 {% block content %}
-    <div class="row g-0 flex-grow-1 p-4">
-        <div class="col-lg-12">
-            <div class="row g-0">
-                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="{% url 'profilo' %}">Home</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">I miei ordini</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="row g-0">
-                <h4>I mei ordini</h4>
-            </div>
-            <div class="row g-0">
-                <div class="col-lg-12">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <th>#</th>
-                                <th>Stato</th>
-                                <th>Totale</th>
-                                <th></th>
-                            </thead>
-                            <tbody>
-                                {% for row in object_list %}
-                                    <tr>
-                                        <td>{{ row.id }}</td>
-                                        <td>{{ row.order_status.description }}</td>
-                                        <td>€ {{ row.subtotal }}</td>
-                                        <td>
-                                            <a class="text-decoration-none"
-                                               href="{% url 'profilo-ordini-detail' pk=row.id %}">
-                                                <i class="bi bi-three-dots"></i> Dettaglio
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="col-lg-12 bg-secondary p-3">
+        <div class="row g-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                        <a class="text-light" href="{% url 'profilo' %}">Profilo</a>
+                    </li>
+                    <li class="breadcrumb-item active text-light" aria-current="page">I miei ordini</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="col-lg-12 flex-grow-1 p-4">
+        <div class="row g-0">
+            <h4>I mei ordini</h4>
+        </div>
+        <div class="row g-0">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <th>#</th>
+                            <th>Stato</th>
+                            <th>Totale</th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            {% for row in object_list %}
+                                <tr>
+                                    <td>{{ row.id }}</td>
+                                    <td>{{ row.order_status.description }}</td>
+                                    <td>€ {{ row.subtotal }}</td>
+                                    <td>
+                                        <a class="text-decoration-none"
+                                           href="{% url 'profilo-ordini-detail' pk=row.id %}">
+                                            <i class="bi bi-three-dots"></i> Dettaglio
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
