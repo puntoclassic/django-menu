@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django_object_actions',
     'commerce',
     'solo',
-    'corsheaders',   
+    'corsheaders',
     'webapi',
     'allauth',
     'allauth.account',
@@ -190,10 +190,8 @@ STRIPE_TEST_SECRET_KEY = env("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
 
 ACCOUNT_FORMS = {
-
     'signup': 'commerce.forms.CustomSignInForm',
 }
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),

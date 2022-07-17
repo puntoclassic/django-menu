@@ -2,29 +2,38 @@
 {% load account %}
 {% load i18n %}
 {% block content %}
-    <p>Gentile cliente il tuo ordine è stato creato.</p>
-    <p>
-        <b>Codice ordine</b> : {{ order.id }}
-    </p>
-    <p>Totale da pagare alla consegna: {{ order.subtotal }} €</p>
-    <b>Cosa c'e nel tuo ordine</b>
-</br>
-<table style="width:100%">
-    <thead>
-        <tr>
-            <td style="font-weight:bold">Nome</td>
-            <td style="font-weight:bold">Prezzo</td>
-            <td style="font-weight:bold">Quantità</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in order.order_details.all %}
-            <tr>
-                <td>{{ item.name }}</td>
-                <td>{{ item.price }} €</td>
-                <td>{{ item.quantity }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div>
+        <p>Gentile cliente il tuo ordine è stato creato.</p>
+        <p>
+            <b>Codice ordine</b> : {{ order.id }}
+        </p>
+        <p>Totale da pagare alla consegna: {{ order.subtotal }} €</p>
+    </div>
+    <div>
+        <b>Cosa c'e nel tuo ordine</b>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <td>
+                        <b>Nome</b>
+                    </td>
+                    <td>
+                        <b>Prezzo</b>
+                    </td>
+                    <td>
+                        <b>Quantità</b>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.order_details.all %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.price }} €</td>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock content %}

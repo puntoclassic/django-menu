@@ -86,15 +86,7 @@ class AccountResendActivationCodeView(generics.CreateAPIView):
         send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[request.user.email],html_message=message)
 
         return Response({})
-
-
-
-           
-
-        
-
        
-
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer

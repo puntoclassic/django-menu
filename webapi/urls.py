@@ -1,16 +1,23 @@
-from unicodedata import decimal
+from django.urls import path
+from webapi.views import AccountActivateByCodeView, AccountResendActivationCodeView, MyTokenObtainPairView, RegisterView
+
 from rest_framework import routers
 from django.urls import path, include
 from commerce.models import Category, Food
 from webapi.schema import CategoryApiResponse, FoodApiResponse, MyTokenObtainPairOutSchema, MyTokenObtainPairSchema
 from webapi.views import AccountActivateByCodeView, AccountResendActivationCodeView, MyTokenObtainPairView, RegisterView
-
-
 from ninja_extra import api_controller, route
 from ninja_jwt.controller import TokenObtainPairController, TokenVerificationController
-
 from typing import List
 from ninja_extra import NinjaExtraAPI
+from rest_framework_simplejwt.views import (
+    TokenRefreshView,
+    TokenVerifyView
+)
+
+
+
+
 
 api = NinjaExtraAPI()
 
@@ -43,12 +50,9 @@ def foodsByCategory(request,category_id: int):
     return Food.objects.filter(default_category__id=category_id)
 
 
-
-urlpatterns = [
+urlpatterns = [   
     path('',api.urls),  
     path('signin/', RegisterView.as_view(), name='auth_register'), 
     path('login/verifyAccount/', AccountActivateByCodeView.as_view(), name='verify_account_by_code'),
     path('login/resendActivationCode/', AccountResendActivationCodeView.as_view(), name='resend_activation_code'),
 ]
-
-#
