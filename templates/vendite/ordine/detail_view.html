@@ -55,8 +55,8 @@
                             {% for item in object.order_details.all %}
                                 <tr class="align-middle">
                                     <td>{{ item.quantity }}x {{ item.name }}</td>
-                                    <td class="text-center">{{ item.unit_price }} €</td>
-                                    <td class="text-center">{{ item.price }} €</td>
+                                    <td class="text-center">{{ item.unit_price|floatformat:2|intdot }} €</td>
+                                    <td class="text-center">{{ item.price|floatformat:2|intdot }} €</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -66,7 +66,7 @@
                                 <td class="text-center">
                                     <b>Totale</b>
                                 </td>
-                                <td class="text-center">{{ object.subtotal }} €</td>
+                                <td class="text-center">{{ object.subtotal|floatformat:2|intdot }} €</td>
                             </tr>
                         </tfoot>
                     </table>

@@ -42,7 +42,7 @@
                                 <tr>
                                     <td>{{ row.id }}</td>
                                     <td>{{ row.order_status.description }}</td>
-                                    <td>€ {{ row.subtotal }}</td>
+                                    <td>€ {{ row.subtotal|floatformat:2|intdot }}</td>
                                     <td>
                                         <a class="text-decoration-none"
                                            href="{% url 'vendite.ordine.dettaglio' pk=row.id %}">

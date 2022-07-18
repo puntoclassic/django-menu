@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from impostazioni.models import User
 from django.db.models import Sum
@@ -23,10 +24,12 @@ class Order(models.Model):
     note = models.TextField(blank=True,null=True,verbose_name='Note ordine')
     is_paid = models.BooleanField(verbose_name='Pagato',default=False)
 
+  
     @property
     def subtotal(self):
         total = self.order_details.aggregate(TOTAL = Sum('price'))['TOTAL']
-        return total
+        return total 
+
     
     def __str__(self):
         return str(self.id)
@@ -43,8 +46,11 @@ class OrderDetail(models.Model):
     price =  models.DecimalField(verbose_name='Prezzo totale', max_digits=4, decimal_places=2,blank=True,null=False) 
 
     def save(self, *args, **kwargs) -> None:
+        
         self.price = self.unit_price * self.quantity
-        return super().save(*args, **kwargs)   
+       
+        return super().save(*args, **kwargs)  
+
     
     def __str__(self):
         return f"{str(self.order.id)} - {self.name}"
