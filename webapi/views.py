@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from shop.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
-from commerce.models import GeneraliModel, User
+from impostazioni.models import GeneraliModel, User
 
 from webapi.serializers import AccountActivationByCodeSerializer, MyTokenObtainPairSerializer, RegisterSerializer
 # Create your views here.

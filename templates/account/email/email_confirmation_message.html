@@ -1,0 +1,14 @@
+{% extends "layouts/email_layout.html" %}
+{% load account %}
+{% load i18n %}
+{% block content %}
+    {% autoescape off %}
+        <p>
+            Il tuo account è stato creato, ora devi confermare la tua email, per farlo clicca sul tasto Attiva il tuo account.
+        </p>
+        <p style="text-align:center">
+            <a class="button button-primary" href="{{ activate_url }}">Attiva il tuo account</a>
+        </p>
+        <p>Se il link non funziona, compialo e incollalo nella barra degli indirizzi del tuo browser.</p>
+    {% endautoescape %}
+{% endblock content %}

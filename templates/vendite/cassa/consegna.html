@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+{% block page_title %}
+    Home
+{% endblock page_title %}
+{% block topbar-left %}
+    {% include "widgets/home-button.html" %}
+{% endblock topbar-left %}
+{% block topbar-right %}
+    {% include "widgets/cart-button.html" %}
+    {% include "widgets/account-manage.html" %}
+{% endblock topbar-right %}
+{% block content %}
+    <div class="row g-0 bg-secondary p-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item">
+                    <a class="text-light" href="{% url 'show-cart' %}">Carrello</a>
+                </li>
+                <li class="breadcrumb-item active text-light" aria-current="page">Tipo consegna</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row g-0 flex-grow-1 p-4">
+        <form method="post" class="col-lg-4">
+            {% csrf_token %}
+            <p>Scegli il modo in cui vuoi ricevere il tuo ordine</p>
+            {{ form.errors }}
+            <div class="form-row mb-3">{{ form.tipo_consegna }}</div>
+            <div class="form-row">
+                <button type="submit" class="btn btn-success">Vai</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
+{% block header %}
+    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

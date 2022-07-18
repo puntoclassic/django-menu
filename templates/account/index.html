@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %}
+{% block page_title %}
+  Profilo
+{% endblock page_title %}
+{% block content %}
+  <div class="row g-0 bg-secondary p-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item active text-light" aria-current="page">Profilo</li>
+        <li class="breadcrumb-item active text-light" aria-current="page">{{ user.first_name }} {{ user.last_name }}</li>
+      </ol>
+    </nav>
+  </div>
+  {% if messages %}
+    <div class="row g-0">
+      <div class="alert alert-info">
+        {% for message in messages %}
+          <span>{{ message }}</span>
+          <br/>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  <div class="row g-0 d-flex flex-grow-1">
+    <div class="col-lg-12 p-4 d-flex flex-column align-items-start justify-content-start">
+      <div class="row g-0">
+        <div class="col-lg-12 d-flex flex-column">
+          <h4>Il mio profilo</h4>
+          <a class="text-decoration-none"
+             href="{% url 'impostazioni.profilo.informazioni.view' %}"><i class="bi bi-person-lines-fill me-2"></i>
+        Informazioni personali</a>
+        <a class="text-decoration-none"
+           href="{% url 'account_change_password' %}"><i class="bi bi-key me-2"></i>
+      Cambia la password</a>
+      <a class="text-decoration-none" href="{% url 'vendite.ordine.list' %}"><i class="bi bi-bag me-2"></i>
+    I miei ordini </a>
+  </div>
+</div>
+</div>
+</div>
+{% endblock content %}
+{% block topbar-left %}
+  {% include "widgets/home-button.html" %}
+{% endblock topbar-left %}
+{% block topbar-right %}
+  {% include "widgets/cart-button.html" %}
+  {% include "widgets/account-manage.html" %}
+{% endblock topbar-right %}
+{% block header %}
+  <div class="g-0 row">{% include "widgets/header.html" %}</div>
+{% endblock header %}

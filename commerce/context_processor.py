@@ -1,5 +1,6 @@
 import imp
-from .models import Category, GeneraliModel
+from catalogo.models import Category
+from impostazioni.models import GeneraliModel
 
 
 

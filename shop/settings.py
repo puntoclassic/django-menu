@@ -42,7 +42,7 @@ ALLOWED_HOSTS = [
     "192.168.1.27"
 ]
 
-AUTH_USER_MODEL = 'commerce.User'
+AUTH_USER_MODEL = 'impostazioni.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_object_actions',
-    'commerce',
     'solo',
     'corsheaders',
     'rest_framework',
@@ -61,6 +60,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'allauth',
     'allauth.account',
+    'commerce',
+    'catalogo',
+    'vendite',
+    'impostazioni'
+    
 ]
 
 MIDDLEWARE = [
@@ -83,7 +87,7 @@ ROOT_URLCONF = 'shop.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -200,7 +204,7 @@ STRIPE_LIVE_MODE = env("STRIPE_LIVE_MODE")
 
 ACCOUNT_FORMS = {
 
-    'signup': 'commerce.forms.CustomSignInForm',
+    'signup': 'impostazioni.forms.CustomSignInForm',
 }
 
 

@@ -1,0 +1,12 @@
+<div class="row g-0 m-0">
+    <div class="col-lg-12">
+        <form class="row g-0 m-0 " method="get" action="{% url 'catalogo.cerca' %}">
+            <div class="col-md-10 col-lg-10 pe-1">
+                <input type="text" name="search" class="form-control" value="{{ search }}"/>
+            </div>
+            <div class="col-md-2 col-lg-2 mt-1 mt-md-0">
+                <button type="submit" class="btn btn-outline-light">Cerca</button>
+            </div>
+        </form>
+    </div>
+</div>
