@@ -15,14 +15,14 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item">
-                    <a class="text-light" href="{% url 'show-cart' %}">Carrello</a>
+                    <a class="text-light" href="{% url 'vendite.carrello' %}">Carrello</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a class="text-light" href="{% url 'cassa.consegna' %}">Tipo consegna</a>
+                    <a class="text-light" href="{% url 'vendite.cassa.consegna' %}">Tipo consegna</a>
                 </li>
                 {% if request.session.cart.tipo_consegna != "asporto" %}
                     <li class="breadcrumb-item">
-                        <a class="text-light" href="{% url 'cassa.indirizzo.orario' %}">Informazioni consegna</a>
+                        <a class="text-light" href="{% url 'vendite.cassa.indirizzo.orario' %}">Informazioni consegna</a>
                     </li>
                 {% endif %}
                 <li class="breadcrumb-item active text-light" aria-current="page">Riepilogo</li>
