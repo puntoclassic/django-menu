@@ -1,5 +1,7 @@
 from django import forms
 
+from impostazioni.models import ImpostazioniSpedizione
+
 class AddToCartForm(forms.Form):
     food_id = forms.IntegerField(required=True)
     food_name = forms.CharField(required=True)
@@ -22,9 +24,21 @@ class RemoveFromCartForm(forms.Form):
 class CassaConsegnaForm(forms.Form): 
 
     tipo_consegna = forms.ChoiceField(required=True,choices=[
-        ('domicilio',"Consegna a domicilio 2 €"),
+        ('domicilio',f"Consegna a domicilio €"),
         ('asporto','Ritiro in negozio',)
     ],widget=forms.Select(attrs={'class':"form-control"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tipo_consegna'] = forms.ChoiceField(required=True,choices=[
+        ('domicilio',f"Consegna a domicilio {ImpostazioniSpedizione.get_solo().shipping_costs} €"),
+        ('asporto','Ritiro in negozio',)
+    ],widget=forms.Select(attrs={'class':"form-control"}))
+
+
+    
+
+
 
    
 

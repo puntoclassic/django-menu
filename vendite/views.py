@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.contrib import messages
-from impostazioni.models import GeneraliModel
+from impostazioni.models import ImpostazioniGenerali, ImpostazioniSpedizione
 
 
 from .forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
@@ -144,6 +144,11 @@ class CassaConsegnaView(UserPassesTestMixin,FormView):
     template_name: str = "vendite/cassa/consegna.html"   
     form_class = CassaConsegnaForm
     cart = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["shipping_costs"] = ImpostazioniSpedizione.get_solo().shipping_costs
+        return context
    
     def get_initial(self):
         initial = super().get_initial()        
@@ -205,13 +210,13 @@ class CassaRiepilogoView(UserPassesTestMixin,FormView):
 
     def get_context_data(self, **kwargs) :
         context_data = super().get_context_data(**kwargs)
-        impostazioni = GeneraliModel.get_solo()
+        impostazioni = ImpostazioniSpedizione.get_solo()
 
         context_data["shipping_costs"] = impostazioni.shipping_costs
         return context_data    
     
     def form_valid(self, form):
-        impostazioni = GeneraliModel.get_solo()
+        impostazioni = ImpostazioniSpedizione.get_solo()
         cart = get_cart(self.request)
         note = form.cleaned_data["note"]        
         self.order.customer = self.request.user
@@ -246,7 +251,7 @@ class CassaRiepilogoView(UserPassesTestMixin,FormView):
         del self.request.session["cart"]    
 
         message = get_template('vendite/email/email_order_created.html').render({
-            "base_info": GeneraliModel.get_solo(),
+            "base_info": ImpostazioniGenerali.get_solo(),
             "order":self.order            
         })
  
@@ -383,7 +388,7 @@ def stripe_webhook(request):
         order.save()   
 
         message = get_template('vendite/email/email_order_paid.html').render({
-            "base_info": GeneraliModel.get_solo(),
+            "base_info": ImpostazioniGenerali.get_solo(),
             "order":order
         }) 
         send_mail("Il tuo ordine è stato pagato",message,from_email=EMAIL_HOST_USER,recipient_list=[order.customer.email],html_message=message)

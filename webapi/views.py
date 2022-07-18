@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from shop.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
-from impostazioni.models import GeneraliModel, User
+from impostazioni.models import ImpostazioniGenerali, User
 
 from webapi.serializers import AccountActivationByCodeSerializer, MyTokenObtainPairSerializer, RegisterSerializer
 # Create your views here.
@@ -39,7 +39,7 @@ class RegisterView(generics.CreateAPIView):
 
 
         message = get_template('email/email_activation_code.html').render({
-            "base_info": GeneraliModel.get_solo(),
+            "base_info": ImpostazioniGenerali.get_solo(),
             "code":user.activation_code
         }) 
         send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[user.email],html_message=message)
@@ -80,7 +80,7 @@ class AccountResendActivationCodeView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         message = get_template('email/email_activation_code.html').render({
-            "base_info": GeneraliModel.get_solo(),
+            "base_info": ImpostazioniGenerali.get_solo(),
             "code":request.user.activation_code
         }) 
         send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[request.user.email],html_message=message)

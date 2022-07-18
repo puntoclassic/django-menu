@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import GeneraliModel,User
+from .models import ImpostazioniGenerali, ImpostazioniSpedizione,User
 from solo.admin import SingletonModelAdmin
 # Register your models here.
 from allauth.account.models import EmailAddress
@@ -19,6 +19,10 @@ class CustomUserAdmin(UserAdmin):
     def email_verified(self,obj):
         return obj.verified
 
-@admin.register(GeneraliModel)
-class AdminGeneraliModel(SingletonModelAdmin):
+@admin.register(ImpostazioniGenerali)
+class AdminImpostazioniGenerali(SingletonModelAdmin):
+    pass
+
+@admin.register(ImpostazioniSpedizione)
+class AdminImpostazioniConsegna(SingletonModelAdmin):
     pass
