@@ -6,25 +6,26 @@
     <p>
         <b>Codice ordine</b> : {{ order.id }}
     </p>
-    <p>Totale pagato: {{ order.subTotal }} €</p>
-    <b>Cosa c'e nel tuo ordine</b>
-    <br />
-    <table style="width:100%">
-        <thead>
-            <tr>
-                <td style="font-weight:bold">Nome</td>
-                <td style="font-weight:bold">Prezzo</td>
-                <td style="font-weight:bold">Quantità</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in order.order_details.all %}
+    <p>Totale pagato: {{ order.subtotal }} €</p>
+    <p>
+        <b>Cosa c'e nel tuo ordine</b>
+        <table style="width:100%">
+            <thead>
                 <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.price }} €</td>
-                    <td>{{ item.quantity }}</td>
+                    <td style="font-weight:bold">Nome</td>
+                    <td style="font-weight:bold">Prezzo</td>
+                    <td style="font-weight:bold">Quantità</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for item in order.order_details.all %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.unit_price }} €</td>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </p>
 {% endblock content %}

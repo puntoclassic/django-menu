@@ -220,15 +220,14 @@ class CassaRiepilogoView(UserPassesTestMixin,FormView):
         self.order.shipping_delivery_time = cart["orario"]
         self.order.shipping_required = True if cart["tipo_consegna"] == "domicilio" else False
         self.order.shipping_costs = impostazioni.shipping_costs if cart["tipo_consegna"] == "domicilio" else 0.00
-        self.order.subtotal = Decimal(cart["amount"])+Decimal(impostazioni.shipping_costs)
         self.order.order_status = OrderStatus.objects.filter(description="Creato").first()
         self.order.save()  
 
-        if self.order.shipping_required:
+        if self.order.shipping_required == True:
             order_row = OrderDetail()
             order_row.order = self.order
             order_row.name = "Spese di consegna"
-            order_row.price = Decimal(impostazioni.shipping_costs)
+            order_row.unit_price = Decimal(impostazioni.shipping_costs)
             order_row.quantity = 1
             order_row.save()
 
@@ -238,7 +237,7 @@ class CassaRiepilogoView(UserPassesTestMixin,FormView):
             order_row = OrderDetail()
             order_row.order = self.order
             order_row.name = item["name"]
-            order_row.price = Decimal(item["price"])
+            order_row.unit_price = Decimal(item["price"])
             order_row.quantity = item["quantity"]
             order_row.save()    
 
@@ -285,7 +284,7 @@ class CassaPagaView(UserPassesTestMixin,TemplateView):
         ] = env("STRIPE_PUBLIC_KEY")
 
         success_url = self.request.build_absolute_uri(
-            reverse("vendite.cassa.pagato",kwargs={"id":kwargs["id"]})
+            reverse("vendite.ordine.pagato",kwargs={"id":kwargs["id"]})
         )
         cancel_url = self.request.build_absolute_uri(reverse("home"))                 
 
@@ -299,7 +298,7 @@ class CassaPagaView(UserPassesTestMixin,TemplateView):
                     {
                         "price_data": {
                             "currency": "eur",
-                            "unit_amount": int(line.price*100),
+                            "unit_amount": int(line.unit_price*100),
                             "product_data": {
                                 "name": line.name,                               
                             },
@@ -308,7 +307,7 @@ class CassaPagaView(UserPassesTestMixin,TemplateView):
                     },                
             )
 
-        session = stripe.Cassa.Session.create(
+        session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
                 payment_intent_data={
                     "setup_future_usage": "off_session",                   
@@ -322,7 +321,7 @@ class CassaPagaView(UserPassesTestMixin,TemplateView):
                 }
             )           
 
-        context["CART_SESSION_ID"] = session.id
+        context["CHECKOUT_SESSION_ID"] = session.id
 
         return context
 
@@ -376,10 +375,11 @@ def stripe_webhook(request):
     
 
     # Handle the Cassa.session.completed event
-    if event['type'] == 'cart.session.completed':
+    if event['type'] == 'checkout.session.completed':
         metadata = event["data"]["object"]['metadata']   
         order = Order.objects.filter(id=metadata["order_sku"]).first()
-        order.payed = True
+        order.order_status = OrderStatus.objects.filter(description="Pagato").first()
+        order.is_paid = True
         order.save()   
 
         message = get_template('vendite/email/email_order_paid.html').render({

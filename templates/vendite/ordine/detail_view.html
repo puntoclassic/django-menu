@@ -19,7 +19,7 @@
                         <a class="text-light" href="{% url 'impostazioni.profilo.index' %}">Profilo</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a class="text-light" href="{% url 'profilo.ordine.list' %}">I miei ordini</a>
+                        <a class="text-light" href="{% url 'vendite.ordine.elenco' %}">I miei ordini</a>
                     </li>
                     <li class="breadcrumb-item active text-light" aria-current="page">Ordine {{ object.id }}</li>
                 </ol>
@@ -47,15 +47,15 @@
                         <thead>
                             <tr>
                                 <th scope="col">Cibo</th>
-                                <th class="text-center" scope="col">Quantità</th>
+                                <th class="text-center" scope="col">Prezzo unitario</th>
                                 <th class="text-center" scope="col">Prezzo</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in object.order_details.all %}
                                 <tr class="align-middle">
-                                    <td>{{ item.name }}</td>
-                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td>{{ item.quantity }}x {{ item.name }}</td>
+                                    <td class="text-center">{{ item.unit_price }} €</td>
                                     <td class="text-center">{{ item.price }} €</td>
                                 </tr>
                             {% endfor %}

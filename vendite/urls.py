@@ -21,8 +21,8 @@ urlpatterns = [
     path('cassa/consegna/dettagli', CassaIndirizzoOrarioView.as_view() ,name="vendite.cassa.indirizzo.orario"),
     path('cassa/riepilogo', CassaRiepilogoView.as_view() ,name="vendite.cassa.riepilogo"),    
     path('webhook/', stripe_webhook), 
-    path('account/ordini/elenco',OrderListView.as_view(),name='vendite.ordine.list'),
-    path('account/ordini/dettaglio/<int:pk>',OrderDetailView.as_view(),name='vendite.ordine.detail'),
+    path('account/ordini/elenco',OrderListView.as_view(),name='vendite.ordine.elenco'),
+    path('account/ordini/dettaglio/<int:pk>',OrderDetailView.as_view(),name='vendite.ordine.dettaglio'),
     path('account/ordini/pagamento/<int:id>', CassaPagaView.as_view() ,name="vendite.ordine.paga"),
     path('account/ordini/pagamento/completato/<int:id>', CassaPagatoView.as_view() ,name="vendite.ordine.pagato"),   
 ]

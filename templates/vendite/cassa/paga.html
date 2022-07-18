@@ -9,9 +9,9 @@
         <script type="text/javascript">
             // Create a Stripe client.
             var stripe = Stripe("{{STRIPE_PUBLIC_KEY}}");
-            stripe.redirectToCassa({
+            stripe.redirectToCheckout({
               // Get the id field from the Cassa Session creation API response
-                  sessionId: '{{Cassa_SESSION_ID}}'
+                  sessionId: '{{CHECKOUT_SESSION_ID}}'
               })
               .then(function (result) {
                   // If `redirectToCassa` fails due to a browser or network
