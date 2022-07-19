@@ -15,7 +15,7 @@ from shop.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
 from impostazioni.models import ImpostazioniGenerali, User
 
-from webapi.serializers import AccountActivationByCodeSerializer, MyTokenObtainPairSerializer, RegisterSerializer
+from webapi.serializers import AccountActivationByCodeSerializer, MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
 # Create your views here.
 
 class RegisterView(generics.CreateAPIView):
@@ -90,3 +90,15 @@ class AccountResendActivationCodeView(generics.CreateAPIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class TestView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+
+    
+
+
+    

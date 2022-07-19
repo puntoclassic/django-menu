@@ -21,6 +21,11 @@ class FoodSerializer(serializers.ModelSerializer):
         model = Food        
         fields = ['id','name','ingredients','default_category','price']
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User       
+        fields = ['id','first_name','last_name']
+
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
             required=True,
