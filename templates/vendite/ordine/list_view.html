@@ -35,13 +35,15 @@
                             <th>#</th>
                             <th>Stato</th>
                             <th>Totale</th>
-                            <th></th>
+                            <th>Azioni</th>
                         </thead>
                         <tbody>
                             {% for row in object_list %}
                                 <tr>
                                     <td>{{ row.id }}</td>
-                                    <td>{{ row.order_status.description }}</td>
+                                    <td>
+                                        <span class="{{ row.order_status.badge_css_class }}">{{ row.order_status.description }}</span>
+                                    </td>
                                     <td>€ {{ row.subtotal|floatformat:2|intdot }}</td>
                                     <td>
                                         <a class="text-decoration-none"

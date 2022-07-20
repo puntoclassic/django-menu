@@ -7,6 +7,7 @@ from django.db.models import Sum
 
 class OrderStatus(models.Model):
     description = models.CharField(verbose_name='Descrizione stato',max_length=255,blank=False,null=False)
+    badge_css_class = models.CharField(verbose_name='Classe da applicare al badge',max_length=255,blank=True,null=True)
 
     def __str__(self):
         return self.description
@@ -43,7 +44,8 @@ class OrderDetail(models.Model):
     name = models.CharField(max_length=255)
     quantity = models.IntegerField(blank=False,default=1)
     unit_price =  models.DecimalField(verbose_name='Prezzo unitario', max_digits=4, decimal_places=2,blank=True,null=False)
-    price =  models.DecimalField(verbose_name='Prezzo totale', max_digits=4, decimal_places=2,blank=True,null=False) 
+    price =  models.DecimalField(verbose_name='Prezzo totale', max_digits=4, decimal_places=2,blank=True,null=False)
+     
 
     def save(self, *args, **kwargs) -> None:
         
