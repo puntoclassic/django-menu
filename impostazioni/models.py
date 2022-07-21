@@ -10,9 +10,10 @@ from allauth.account.models import EmailAddress
 
 
 class User(AbstractUser):
-   @property
-   def verified(self) -> bool:
-    return EmailAddress.objects.filter(email=self.email).first().verified
+    activation_code = models.CharField(verbose_name='Codice di attivazione',max_length=10,blank=True,null=True)
+    @property
+    def verified(self) -> bool:
+        return EmailAddress.objects.filter(email=self.email).first().verified
 
 
 # Create your models here.

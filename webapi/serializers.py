@@ -1,14 +1,19 @@
+import email
 from catalogo.models import Food, Category
 from rest_framework import  serializers
-from impostazioni.models import User
+from impostazioni.models import ImpostazioniGenerali, User
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenVerifySerializer
 from allauth.account.models import EmailAddress
+from django.template.loader import get_template
+from django.core.mail import send_mail
 
 import random
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from shop.settings import EMAIL_HOST_USER
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,24 +62,30 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            activation_code=activation_code,
-            email_verified=False
+            activation_code=activation_code,            
         )
         
         user.set_password(validated_data['password'])
-        user.save()        
+        user.save()      
+
+        user_email_address = EmailAddress()
+        user_email_address.user = user
+        user_email_address.email = user.email
+        user_email_address.verified = False
+        user_email_address.primary = True
+        user_email_address.save()
+
+        message = get_template('account/email/email_activation_code.html').render({
+            "base_info": ImpostazioniGenerali.get_solo(),
+            "code":activation_code
+        }) 
+        send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[user.email],html_message=message)  
 
         return user
 
 class AccountActivationByCodeSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)      
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user: User):
-        token = super().get_token(user)
 
-        emailAddress = EmailAddress.objects.filter(email=user.email).first()
 
-        token['verified'] = emailAddress.verified
-        return token
+    

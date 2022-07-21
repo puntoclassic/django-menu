@@ -1,10 +1,11 @@
 
 
+import random
 from rest_framework import generics
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenObtainSlidingView
 from django.core.mail import send_mail
 from django.template.loader import get_template
 
@@ -15,7 +16,7 @@ from shop.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
 from impostazioni.models import ImpostazioniGenerali, User
 
-from webapi.serializers import AccountActivationByCodeSerializer, MyTokenObtainPairSerializer, RegisterSerializer, UserSerializer
+from webapi.serializers import AccountActivationByCodeSerializer, RegisterSerializer
 # Create your views here.
 
 class RegisterView(generics.CreateAPIView):
@@ -35,14 +36,7 @@ class RegisterView(generics.CreateAPIView):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()      
-
-
-        message = get_template('email/email_activation_code.html').render({
-            "base_info": ImpostazioniGenerali.get_solo(),
-            "code":user.activation_code
-        }) 
-        send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[user.email],html_message=message)
+        serializer.save()           
      
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -66,7 +60,7 @@ class AccountActivateByCodeView(generics.CreateAPIView):
             emailAddress.verified = True
             emailAddress.save()
             return Response({
-            "status":"Account activated"
+            "status":"Ok"
         })
         else:        
             return Response({
@@ -79,23 +73,31 @@ class AccountResendActivationCodeView(generics.CreateAPIView):
     serializer_class = None
 
     def post(self, request, *args, **kwargs):
-        message = get_template('email/email_activation_code.html').render({
+
+        activation_code = str(random.randrange(100000,999999))
+
+        request.user.activation_code = activation_code
+        request.user.save()
+
+        message = get_template('account/email/email_activation_code.html').render({
             "base_info": ImpostazioniGenerali.get_solo(),
             "code":request.user.activation_code
         }) 
         send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[request.user.email],html_message=message)
 
-        return Response({})
-       
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+        return Response({})      
 
 
-class TestView(generics.ListAPIView):
+class AccountStatusView(generics.GenericAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
+    serializer_class = None
+
+    def post(self, request, *args, **kwargs):
+
+        return Response({
+            "verified":request.user.verified
+        })
+
 
 
     
