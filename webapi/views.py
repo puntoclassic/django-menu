@@ -36,7 +36,17 @@ class RegisterView(generics.CreateAPIView):
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()           
+        user = serializer.save()    
+        activation_code = str(random.randrange(100000,999999))
+
+        user.activation_code = activation_code
+        user.save()
+
+        message = get_template('account/email/email_activation_code.html').render({
+            "base_info": ImpostazioniGenerali.get_solo(),
+            "code":request.user.activation_code
+        }) 
+        send_mail("Attiva il tuo account",message,from_email=EMAIL_HOST_USER,recipient_list=[request.user.email],html_message=message)       
      
         headers = self.get_success_headers(serializer.data)
         return Response(
