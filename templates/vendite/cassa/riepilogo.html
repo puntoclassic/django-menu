@@ -18,88 +18,121 @@
                     <a class="text-light" href="{% url 'vendite.carrello' %}">Carrello</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a class="text-light" href="{% url 'vendite.cassa.consegna' %}">Tipo consegna</a>
+                    <a class="text-light" href="{% url 'vendite.cassa.consegna' %}">1. Tipo consegna</a>
                 </li>
                 {% if request.session.cart.tipo_consegna != "asporto" %}
                     <li class="breadcrumb-item">
-                        <a class="text-light" href="{% url 'vendite.cassa.indirizzo.orario' %}">Informazioni consegna</a>
+                        <a class="text-light" href="{% url 'vendite.cassa.indirizzo.orario' %}">2. Informazioni consegna</a>
                     </li>
                 {% endif %}
-                <li class="breadcrumb-item active text-light" aria-current="page">Riepilogo</li>
+                {% if request.session.cart.tipo_consegna != "asporto" %}
+                    <li class="breadcrumb-item active text-light" aria-current="page">3. Riepilogo</li>
+                {% else %}
+                    <li class="breadcrumb-item active text-light" aria-current="page">2. Riepilogo</li>
+                {% endif %}
             </ol>
         </nav>
     </div>
-    <div class="row g-0 flex-grow-1 p-4">
+    <div class="row g-0 p-4">
         <div class="col-lg-12">
-            <div class="row g-0">
-                <h6>Consegna</h6>
-                {% if request.session.cart.tipo_consegna == "asporto" %}
-                    <p>Hai scelto di ritirare in negozio</p>
-                {% else %}
-                    <p>Hai scelto la consegna a domicilio</p>
-                    <h6>Indirizzo e orario</h6>
-                    <p>
-                        Indirizzo: {{ request.session.cart.indirizzo }}
-                    </br>
-                    Ore: {{ request.session.cart.orario }}
-                </p>
-            {% endif %}
-        </div>
-        <div class="row g-0">
-            <h6>Cosa c'è nel tuo ordine</h6>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Cibo</th>
-                        <th class="text-center" scope="col">Quantità</th>
-                        <th class="text-center" scope="col">Prezzo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in request.session.cart.items.values %}
-                        <tr class="align-middle">
-                            <td>{{ item.name }}</td>
-                            <td class="text-center">{{ item.quantity }}</td>
-                            <td class="text-center">{{ item.price }} €</td>
-                        </tr>
-                    {% endfor %}
-                    {% if request.session.cart.tipo_consegna == "domicilio" %}
-                        <tr class="align-middle">
-                            <td>Consegna</td>
-                            <td class="text-center">1</td>
-                            <td class="text-center">{{ shipping_costs|intdot }} €</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td></td>
-                        <td class="text-center">
-                            <b>Totale</b>
-                        </td>
-                        {% if request.session.cart.tipo_consegna == "asporto" %}
-                            <td class="text-center">{{ request.session.cart.amount }} €</td>
-                        {% else %}
-                            <td class="text-center">{{ request.session.cart.amount|aggiungiCosti:shipping_costs|intdot }} €</td>
-                        {% endif %}
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <div class="row g-0">
-            <form method="post" class="col-lg-4">
-                {% csrf_token %}
-                <div class="form-row mb-3">
-                    <label>Note sull'ordine</label>
-                    <textarea name="note" class="form-control">
-                    </textarea>
+            <div class="row g-0 border-bottom p-4 d-flex justify-content-center flex-column ">
+                <a class="text-decoration-none"
+                   href="{% url 'vendite.cassa.consegna' %}">
+                    <h5 class="m-0">1. Spedizione e consegna</h5>
+                </a>
+            </div>
+            {% if request.session.cart.tipo_consegna != "asporto" %}
+                <div class="row g-0 border-bottom p-4 d-flex justify-content-center flex-column mt-2">
+                    <a class="text-decoration-none"
+                       href="{% url 'vendite.cassa.indirizzo.orario' %}">
+                        <h5 class="m-0">2. Indirizzo e orario</h5>
+                    </a>
                 </div>
-                <button type="submit" class="btn btn-success">Invia ordine</button>
-            </form>
+            {% endif %}
+            <div class="row g-0 border-bottom p-4 d-flex justify-content-center flex-column mt-2">
+                <div class="col-lg-12">
+                    {% if request.session.cart.tipo_consegna != "asporto" %}
+                        <h5>3. Riepilogo</h5>
+                    {% else %}
+                        <h5>2. Riepilogo</h5>
+                    {% endif %}
+                    <div class="row g-0">
+                        <h6>Consegna</h6>
+                        {% if request.session.cart.tipo_consegna == "asporto" %}
+                            <p>Hai scelto di ritirare in negozio</p>
+                        {% else %}
+                            <p>Hai scelto la consegna a domicilio</p>
+                            <h6>Indirizzo e orario</h6>
+                            <p>
+                                Indirizzo: {{ request.session.cart.indirizzo }}
+                                <br/>
+                                Ore: {{ request.session.cart.orario }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="row g-0">
+                        <h6>Cosa c'è nel tuo ordine</h6>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Cibo</th>
+                                    <th class="text-center" scope="col">Quantità</th>
+                                    <th class="text-center" scope="col">Prezzo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in request.session.cart.items.values %}
+                                    <tr class="align-middle">
+                                        <td>{{ item.name }}</td>
+                                        <td class="text-center">{{ item.quantity }}</td>
+                                        <td class="text-center">{{ item.price }} €</td>
+                                    </tr>
+                                {% endfor %}
+                                {% if request.session.cart.tipo_consegna == "domicilio" %}
+                                    <tr class="align-middle">
+                                        <td>Consegna</td>
+                                        <td class="text-center">1</td>
+                                        <td class="text-center">{{ shipping_costs|intdot }} €</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <b>Totale</b>
+                                    </td>
+                                    {% if request.session.cart.tipo_consegna == "asporto" %}
+                                        <td class="text-center">{{ request.session.cart.amount }} €</td>
+                                    {% else %}
+                                        <td class="text-center">{{ request.session.cart.amount|aggiungiCosti:shipping_costs|intdot }} €</td>
+                                    {% endif %}
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="row g-0">
+                        <form method="post" class="col-lg-4">
+                            {% csrf_token %}
+                            <div class="form-row mb-3">
+                                <label>
+                                    Note sull'ordine
+                                </label>
+                                <textarea name="note" class="form-control">
+                            </textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">
+                                Invia ordine
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 {% endblock content %}
 {% block header %}
-    <div class="g-0 row">{% include "widgets/header.html" %}</div>
+    <div class="g-0 row">
+        {% include "widgets/header.html" %}
+    </div>
 {% endblock header %}

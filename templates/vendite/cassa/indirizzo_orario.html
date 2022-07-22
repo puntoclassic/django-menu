@@ -17,37 +17,49 @@
                     <a class="text-light" href="{% url 'vendite.carrello' %}">Carrello</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a class="text-light" href="{% url 'vendite.cassa.consegna' %}">Tipo consegna</a>
+                    <a class="text-light" href="{% url 'vendite.cassa.consegna' %}">1. Tipo consegna</a>
                 </li>
-                <li class="breadcrumb-item active text-light" aria-current="page">Informazioni consegna</li>
+                <li class="breadcrumb-item active text-light" aria-current="page">2. Informazioni consegna</li>
             </ol>
         </nav>
     </div>
     <div class="row g-0 p-4">
-        <form method="post" class="col-lg-4">
-            {% csrf_token %}
-            <p>Inserisci l'indirizzo e l'orario di consegna preferito</p>
-            <div class="form-row mb-3">
-                <label>Indirizzo di consegna</label>
-                <input name="indirizzo"
-                       value="{{ form.indirizzo.value }}"
-                       class="form-control {% if form.indirizzo.errors %}is-invalid{% endif %}"/>
-                <div class="invalid-feedback">{{ form.indirizzo.errors }}</div>
+        <div class="col-lg-12">
+            <div class="row g-0 border-bottom p-4 d-flex justify-content-center flex-column ">
+                <a class="text-decoration-none"
+                   href="{% url 'vendite.cassa.consegna' %}">
+                    <h5 class="m-0">1. Spedizione e consegna</h5>
+                </a>
             </div>
-            <div class="form-row mb-3">
-                <label>Orario di consegna</label>
-                <input name="orario"
-                       value="{{ form.orario.value }}"
-                       class="form-control {% if form.orario.errors %}is-invalid{% endif %}"/>
-                <div class="invalid-feedback">{{ form.orario.errors }}</div>
+            <div class="row g-0 border-bottom p-4 d-flex justify-content-center flex-column mt-2">
+                <form method="post" class="col-lg-4 m-0">
+                    <h5 class="m-0">2. Indirizzo e orario</h5>
+                    {% csrf_token %}
+                    <p>Inserisci l'indirizzo e l'orario di consegna preferito</p>
+                    <div class="form-row mb-3">
+                        <label>Indirizzo di consegna</label>
+                        <input name="indirizzo"
+                               value="{{ form.indirizzo.value }}"
+                               class="form-control {% if form.indirizzo.errors %}is-invalid{% endif %}"/>
+                        <div class="invalid-feedback">{{ form.indirizzo.errors }}</div>
+                    </div>
+                    <div class="form-row mb-3">
+                        <label>Orario di consegna</label>
+                        <input name="orario"
+                               value="{{ form.orario.value }}"
+                               class="form-control {% if form.orario.errors %}is-invalid{% endif %}"/>
+                        <div class="invalid-feedback">{{ form.orario.errors }}</div>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="btn btn-success">Vai</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-row  mb-3">
-                <button type="submit" class="btn btn-success">Vai</button>
+            <div class="row g-0 border-bottom p-4 d-flex justify-content-center flex-column mt-2">
+                <h5 class="m-0">3. Riepilogo</h5>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-</div>
 {% endblock content %}
 {% block header %}
     <div class="g-0 row">{% include "widgets/header.html" %}</div>
