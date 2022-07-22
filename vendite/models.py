@@ -1,6 +1,4 @@
-from decimal import Decimal
 from django.db import models
-from impostazioni.models import User
 from django.db.models import Sum
 
 # Create your models here.
@@ -17,7 +15,7 @@ class OrderStatus(models.Model):
         verbose_name_plural = "stati ordine"
 
 class Order(models.Model):
-    customer = models.ForeignKey(User,related_name='orders',verbose_name="Cliente",blank=False,null=True,on_delete=models.SET_NULL)
+    customer = models.ForeignKey('impostazioni.User',related_name='orders',verbose_name="Cliente",blank=False,null=True,on_delete=models.SET_NULL)
     shipping_address = models.TextField(verbose_name='Indirizzo di consegna',blank=True,null=True)
     shipping_delivery_time = models.TextField(verbose_name='Orario di consegna',blank=True,null=True)
     shipping_required = models.BooleanField(verbose_name='Consegna a domicilio',default=False)

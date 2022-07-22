@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ImpostazioniGenerali, ImpostazioniSpedizione,User
+from .models import ImpostazioniGenerali, ImpostazioniOrdini, ImpostazioniSpedizione,User
 from solo.admin import SingletonModelAdmin
 # Register your models here.
 from allauth.account.models import EmailAddress
@@ -25,4 +25,8 @@ class AdminImpostazioniGenerali(SingletonModelAdmin):
 
 @admin.register(ImpostazioniSpedizione)
 class AdminImpostazioniConsegna(SingletonModelAdmin):
+    pass
+
+@admin.register(ImpostazioniOrdini)
+class AdminImpostazioniOrdini(SingletonModelAdmin):
     pass

@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.contrib import messages
-from impostazioni.models import ImpostazioniGenerali, ImpostazioniSpedizione
+from impostazioni.models import ImpostazioniGenerali, ImpostazioniOrdini, ImpostazioniSpedizione
 
 
 from .forms import AddToCartForm, DecreaseQtyForm, IncreaseQtyForm, RemoveFromCartForm
@@ -207,16 +207,17 @@ class CassaRiepilogoView(UserPassesTestMixin,FormView):
 
     form_class = CassaRiepilogoOrdineForm
     order = Order()
+    impostazioni : ImpostazioniSpedizione = ImpostazioniSpedizione.get_solo()
+    impostazioni_ordini : ImpostazioniOrdini = ImpostazioniOrdini.get_solo()
 
     def get_context_data(self, **kwargs) :
-        context_data = super().get_context_data(**kwargs)
-        impostazioni = ImpostazioniSpedizione.get_solo()
+        context_data = super().get_context_data(**kwargs)       
 
-        context_data["shipping_costs"] = impostazioni.shipping_costs
+        context_data["shipping_costs"] = self.impostazioni.shipping_costs
         return context_data    
     
     def form_valid(self, form):
-        impostazioni = ImpostazioniSpedizione.get_solo()
+        
         cart = get_cart(self.request)
         note = form.cleaned_data["note"]        
         self.order.customer = self.request.user
@@ -224,15 +225,15 @@ class CassaRiepilogoView(UserPassesTestMixin,FormView):
         self.order.shipping_address = cart["indirizzo"]
         self.order.shipping_delivery_time = cart["orario"]
         self.order.shipping_required = True if cart["tipo_consegna"] == "domicilio" else False
-        self.order.shipping_costs = impostazioni.shipping_costs if cart["tipo_consegna"] == "domicilio" else 0.00
-        self.order.order_status = OrderStatus.objects.filter(description="Creato").first()
+        self.order.shipping_costs = self.impostazioni.shipping_costs if cart["tipo_consegna"] == "domicilio" else 0.00
+        self.order.order_status : OrderStatus = self.impostazioni_ordini.default_created_state
         self.order.save()  
 
         if self.order.shipping_required == True:
             order_row = OrderDetail()
             order_row.order = self.order
             order_row.name = "Spese di consegna"
-            order_row.unit_price = Decimal(impostazioni.shipping_costs)
+            order_row.unit_price = Decimal(self.impostazioni.shipping_costs)
             order_row.quantity = 1
             order_row.save()
 
@@ -381,9 +382,10 @@ def stripe_webhook(request):
 
     # Handle the Cassa.session.completed event
     if event['type'] == 'checkout.session.completed':
+        impostazioni_ordini : ImpostazioniOrdini = ImpostazioniOrdini.get_solo()
         metadata = event["data"]["object"]['metadata']   
         order = Order.objects.filter(id=metadata["order_sku"]).first()
-        order.order_status = OrderStatus.objects.filter(description="Pagato").first()
+        order.order_status = impostazioni_ordini.default_paid_state
         order.is_paid = True
         order.save()   
 

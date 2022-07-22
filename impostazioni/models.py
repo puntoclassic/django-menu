@@ -1,4 +1,5 @@
 
+from tokenize import Single
 from django.db import models
 from django.utils.text import slugify
 from django.db import models
@@ -7,6 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from solo.models import SingletonModel
 from allauth.account.models import EmailAddress
+
+from vendite.models import OrderStatus
 
 
 class User(AbstractUser):
@@ -35,3 +38,13 @@ class ImpostazioniSpedizione(SingletonModel):
 
     class Meta:
         verbose_name = "Spedizione e consegna"
+
+class ImpostazioniOrdini(SingletonModel):
+    default_created_state = models.ForeignKey(OrderStatus,verbose_name='Stato per ordine creato',blank=False,null=True,on_delete=models.SET_NULL,related_name='default_created_state_reverse')
+    default_paid_state = models.ForeignKey(OrderStatus,verbose_name='Stato per ordine pagato',blank=False,null=True,on_delete=models.SET_NULL,related_name='default_paid_state_reverse')
+
+    def __str__(self):
+        return "Ordini"
+
+    class Meta:
+        verbose_name = "Ordini"

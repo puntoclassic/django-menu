@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
     TokenObtainPairView
 )
+from django.views.decorators.csrf import csrf_protect
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
