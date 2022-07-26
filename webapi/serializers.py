@@ -34,6 +34,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
+    
 
     class Meta:
         model = User
@@ -44,6 +45,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
+
+        email = attrs['password']
+
+        if(User.objects.filter(email=email).first() is not None):
+            raise serializers.ValidationError(
+            {
+                "status":"Email is busy"              
+            })
+        
+
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
 

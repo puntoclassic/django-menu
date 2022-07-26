@@ -213,6 +213,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
 }
 
+
 '''
 LOGGING = {
     "version": 1,

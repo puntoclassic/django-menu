@@ -3,8 +3,7 @@ from django.urls import path, include
 from webapi.views import AccountActivateByCodeView, AccountResendActivationCodeView, AccountStatusView, RegisterView
 from webapi.viewsets import CategoryViewSet, FoodViewSet 
 
-from rest_framework_simplejwt.views import (
-    TokenRefreshView,
+from rest_framework_simplejwt.views import (    TokenRefreshView,
     TokenVerifyView,
     TokenObtainPairView
 )
@@ -12,8 +11,8 @@ from django.views.decorators.csrf import csrf_protect
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'categories', CategoryViewSet)
-router.register(r'foods', FoodViewSet)
+router.register(r'categorie', CategoryViewSet)
+router.register(r'cibi', FoodViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),  

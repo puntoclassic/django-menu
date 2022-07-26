@@ -1,6 +1,7 @@
 
 
 import random
+import django
 from rest_framework import generics
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.response import Response
@@ -12,28 +13,24 @@ from django.template.loader import get_template
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from impostazioni.forms import CustomSignInForm
 from shop.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
 from impostazioni.models import ImpostazioniGenerali, User
+from django.views.decorators.csrf import csrf_protect 
 
 from webapi.serializers import AccountActivationByCodeSerializer, RegisterSerializer
 # Create your views here.
+from django.utils.decorators import method_decorator
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
-    serializer_class = RegisterSerializer  
+    serializer_class = RegisterSerializer     
 
-    def create(self, request, *args, **kwargs):
-        email = str(request.data["email"]).lower()
-
-        if(User.objects.filter(email=email).first() is not None):
-            return Response(
-            {
-                "status":"Email is busy"              
-            }
-        )
-
+    @ method_decorator(csrf_protect)
+    def create(self, request, *args, **kwargs):  
+       
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()    
