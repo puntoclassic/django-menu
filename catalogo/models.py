@@ -17,7 +17,7 @@ class Category(models.Model):
 
     @property
     def image_url(self):
-        return self.image
+        return self.image.url
 
     class Meta:
         verbose_name = "categoria"

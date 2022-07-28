@@ -13,7 +13,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id','name','image']
+        fields = ['id','name','image_url']
 
 
 class FoodSerializer(serializers.ModelSerializer):

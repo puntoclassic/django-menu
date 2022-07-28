@@ -11,8 +11,8 @@ from django.views.decorators.csrf import csrf_protect
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'categorie', CategoryViewSet)
-router.register(r'cibi', FoodViewSet)
+router.register(r'categories', CategoryViewSet)
+router.register(r'foods', FoodViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),  
