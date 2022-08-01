@@ -21,9 +21,13 @@
                 <h4 class="fw-light">Categoria {{ category.name|lower }}</h4>
             </div>
             <div class="row g-0">
-                {% for food in category.foods.all %}
-                    {% include "widgets/food-item.html" with item=food %}
-                {% endfor %}
+                {% if category.foods.all %}
+                    {% for food in category.foods.all %}
+                        {% include "widgets/food-item.html" with item=food %}
+                    {% endfor %}
+                {% else %}
+                    <p>Non ci sono cibi in questa categoria</p>
+                {% endif %}
             </div>
             <div class="row g-0"></div>
             <div class="row g-0"></div>
